@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { ProductCardComponent } from './shared/components/product-card/product-card.component';
+import type { Product } from './core/model/product.model';
 
 @Component({
   selector: 'app-root',
@@ -17,27 +18,45 @@ import { ProductCardComponent } from './shared/components/product-card/product-c
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  products = [
+  products: Product[] = [
     {
       id: 1,
-      name: 'Laptop ASUS',
+      title: 'Laptop ASUS',
+      description: 'Laptop phục vụ học tập và làm việc',
       price: 20000000,
-      imageUrl: 'https://placehold.co/600x400?text=Laptop',
-      inStock: true,
+      discountPercentage: 15,
+      rating: 4.8,
+      stock: 10,
+      brand: 'ASUS',
+      category: 'laptops',
+      thumbnail: 'https://placehold.co/600x400?text=Laptop',
+      images: ['https://placehold.co/600x400?text=Laptop'],
     },
     {
       id: 2,
-      name: 'Tai nghe không dây',
+      title: 'Tai nghe không dây',
+      description: 'Tai nghe không dây phục vụ giải trí',
       price: 1200000,
-      imageUrl: 'https://placehold.co/600x400?text=Headphones',
-      inStock: true,
+      discountPercentage: 5,
+      rating: 4.5,
+      stock: 20,
+      brand: 'Sony',
+      category: 'accessories',
+      thumbnail: 'https://placehold.co/600x400?text=Headphones',
+      images: ['https://placehold.co/600x400?text=Headphones'],
     },
     {
       id: 3,
-      name: 'Bàn phím cơ',
+      title: 'Bàn phím cơ',
+      description: 'Bàn phím cơ dành cho chơi game và làm việc',
       price: 850000,
-      imageUrl: 'https://placehold.co/600x400?text=Keyboard',
-      inStock: false,
+      discountPercentage: 20,
+      rating: 4.6,
+      stock: 0,
+      brand: 'Logitech',
+      category: 'accessories',
+      thumbnail: 'https://placehold.co/600x400?text=Keyboard',
+      images: ['https://placehold.co/600x400?text=Keyboard'],
     },
   ];
 }
