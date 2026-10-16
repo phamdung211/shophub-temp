@@ -1,17 +1,5 @@
 <app-header />
 
-<main class="min-h-screen bg-gray-100 px-6 py-10">
-  <div class="mx-auto max-w-7xl">
-    <h1 class="text-3xl font-bold text-gray-900">Sản phẩm nổi bật</h1>
-
-    <p class="mt-2 text-gray-600">Khám phá các sản phẩm tại ShopHub.</p>
-
-    <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      @for (product of products; track product.id) {
-        <app-product-card [product]="product" />
-      }
-    </div>
-  </div>
-</main>
+<app-product-catalog />
 
 <app-footer />
