@@ -1,43 +1,42 @@
-import { Component, Input } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnInit,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
+} from '@angular/core';
+
 import { DecimalPipe } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import type { Product } from '../../../core/model/product.model';
+import { Product } from '../../../core/model/product.model';
 
 @Component({
   selector: 'app-product-card',
   standalone: true,
-  imports: [DecimalPipe, FormsModule],
+  imports: [DecimalPipe],
   templateUrl: './product-card.component.html',
+  styleUrl: './product-card.component.scss',
 })
-export class ProductCardComponent {
-  @Input() product!: Product;
+export class ProductCardComponent implements OnInit, OnChanges, OnDestroy {
+  @Input({ required: true }) product!: Product;
 
-  quantity = 1;
+  @Output() addToCart = new EventEmitter<Product>();
 
-  get inStock(): boolean {
-    return this.product.stock > 0;
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('[ProductCard] ngOnChanges', changes);
   }
 
-  addToCart(): void {
-    if (!Number.isInteger(this.quantity) || this.quantity < 1) {
-      alert('Số lượng phải là số nguyên lớn hơn hoặc bằng 1');
-      return;
-    }
-
-    if (!this.inStock) {
-      return;
-    }
-
-    console.log(
-      `Đã thêm ${this.quantity} sản phẩm ${this.product.title} vào giỏ hàng`,
-    );
-
-    alert(
-      `Đã thêm ${this.quantity} sản phẩm ${this.product.title} vào giỏ hàng`,
-    );
+  ngOnInit(): void {
+    console.log('[ProductCard] ngOnInit', this.product);
   }
 
-  isInteger(value: number): boolean {
-    return Number.isInteger(value);
+  ngOnDestroy(): void {
+    console.log('[ProductCard] ngOnDestroy');
+  }
+
+  onBuyClick(): void {
+    this.addToCart.emit(this.product);
   }
 }

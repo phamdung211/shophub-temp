@@ -1,17 +1,18 @@
-<section class="product-catalog">
-  <header class="catalog-header">
-    <h1>Danh mục sản phẩm</h1>
-    <p>Khám phá các sản phẩm tại ShopHub</p>
-  </header>
+<h2 class="text-2xl font-bold mb-2">Sản phẩm nổi bật</h2>
 
-  <div class="product-grid">
-    @for (product of products; track product.id) {
-      <app-product-card [product]="product" />
-    } @empty {
-      <div class="empty-state">
-        <h2>Không tìm thấy sản phẩm nào</h2>
-        <p>Vui lòng quay lại sau.</p>
-      </div>
-    }
-  </div>
-</section>
+<p class="mb-6">Khám phá các sản phẩm tại ShopHub.</p>
+
+<app-product-filter-bar
+  (searchChange)="onSearchChange($event)"
+  (categoryChange)="onCategoryChange($event)"
+/>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+  @for (item of filteredProducts; track item.id) {
+    <app-product-card [product]="item" (addToCart)="handleAddToCart($event)" />
+  } @empty {
+    <p class="col-span-full text-center py-8">
+      Không tìm thấy sản phẩm phù hợp.
+    </p>
+  }
+</div>

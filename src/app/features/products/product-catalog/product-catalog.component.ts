@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ProductCardComponent } from '../../../shared/components/product-card/product-card.component';
-import type { Product } from '../../../core/model/product.model';
+import { ProductFilterBarComponent } from '../product-filter-bar/product-filter-bar.component';
+import { Product } from '../../../core/model/product.model';
 
 @Component({
   selector: 'app-product-catalog',
   standalone: true,
-  imports: [ProductCardComponent],
+  imports: [ProductCardComponent, ProductFilterBarComponent],
   templateUrl: './product-catalog.component.html',
   styleUrl: './product-catalog.component.scss',
 })
-export class ProductCatalogComponent {
+export class ProductCatalogComponent implements OnInit {
   products: Product[] = [
     {
       id: 1,
@@ -116,4 +117,40 @@ export class ProductCatalogComponent {
       images: ['https://placehold.co/600x400?text=Xiaomi'],
     },
   ];
+  searchText = '';
+  selectedCategory = 'all';
+
+  ngOnInit(): void {
+    console.log('[Catalog] ngOnInit');
+
+    // Nếu chưa dùng API, khởi tạo hoặc gán danh sách mẫu hiện có.
+  }
+
+  get filteredProducts(): Product[] {
+    return this.products.filter((product) => {
+      const matchesSearch = product.title
+        .toLowerCase()
+        .includes(this.searchText.toLowerCase());
+
+      const matchesCategory =
+        this.selectedCategory === 'all' ||
+        product.category.toLowerCase() === this.selectedCategory.toLowerCase();
+
+      return matchesSearch && matchesCategory;
+    });
+  }
+
+  onSearchChange(keyword: string): void {
+    this.searchText = keyword;
+  }
+
+  onCategoryChange(category: string): void {
+    this.selectedCategory = category;
+  }
+
+  handleAddToCart(product: Product): void {
+    console.log('Sản phẩm được chọn mua:', product);
+
+    // Có thể tích hợp CartService sau khi hoàn thiện luồng sự kiện.
+  }
 }
