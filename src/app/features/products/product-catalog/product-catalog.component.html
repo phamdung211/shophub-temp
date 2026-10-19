@@ -1,0 +1,17 @@
+<section class="product-catalog">
+  <header class="catalog-header">
+    <h1>Danh mục sản phẩm</h1>
+    <p>Khám phá các sản phẩm tại ShopHub</p>
+  </header>
+
+  <div class="product-grid">
+    @for (product of products; track product.id) {
+      <app-product-card [product]="product" />
+    } @empty {
+      <div class="empty-state">
+        <h2>Không tìm thấy sản phẩm nào</h2>
+        <p>Vui lòng quay lại sau.</p>
+      </div>
+    }
+  </div>
+</section>
