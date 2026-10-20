@@ -12,10 +12,23 @@ import {
 import { DecimalPipe } from '@angular/common';
 import { Product } from '../../../core/model/product.model';
 
+import { VndCurrencyPipe } from '../../pipes/vnd-currency.pipe';
+import { DiscountCalculatorPipe } from '../../pipes/discount-calculator.pipe';
+import { TruncatePipe } from '../../pipes/truncate.pipe';
+import { ImageFallbackDirective } from '../../directives/image-fallback.directive';
+import { HoverCardDirective } from '../../directives/hover-card.directive';
+
 @Component({
   selector: 'app-product-card',
   standalone: true,
-  imports: [DecimalPipe],
+  imports: [
+    DecimalPipe,
+    VndCurrencyPipe,
+    DiscountCalculatorPipe,
+    TruncatePipe,
+    ImageFallbackDirective,
+    HoverCardDirective,
+  ],
   templateUrl: './product-card.component.html',
   styleUrl: './product-card.component.scss',
 })

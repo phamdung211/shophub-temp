@@ -16,7 +16,7 @@ export class ProductCatalogComponent implements OnInit {
       id: 1,
       title: 'Laptop ASUS',
       description: 'Laptop phục vụ học tập và làm việc',
-      price: 20000000,
+      price: 2000000,
       discountPercentage: 15,
       rating: 4.8,
       stock: 10,
