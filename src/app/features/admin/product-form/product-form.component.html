@@ -1,0 +1,131 @@
+<div class="product-form-container">
+  <h2>Thêm sản phẩm mới</h2>
+
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="form-field">
+      <label for="title">Tên sản phẩm</label>
+      <input id="title" type="text" formControlName="title" />
+
+      <app-validation-message
+        [control]="productForm.controls.title"
+        label="Tên sản phẩm"
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="price">Giá sản phẩm (VNĐ)</label>
+      <input
+        id="price"
+        type="number"
+        min="0"
+        step="any"
+        formControlName="price"
+      />
+
+      <app-validation-message
+        [control]="productForm.controls.price"
+        label="Giá sản phẩm"
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="discountPercentage">Giảm giá (%)</label>
+      <input
+        id="discountPercentage"
+        type="number"
+        min="0"
+        max="90"
+        step="any"
+        formControlName="discountPercentage"
+      />
+
+      <app-validation-message
+        [control]="productForm.controls.discountPercentage"
+        label="Phần trăm giảm giá"
+      />
+    </div>
+
+    @if (
+      productForm.hasError("invalidPriceDiscount") &&
+      (productForm.controls.price.touched ||
+        productForm.controls.discountPercentage.touched)
+    ) {
+      <p class="error">Giá sau giảm không được âm.</p>
+    }
+
+    <div class="form-field">
+      <label for="stock">Số lượng tồn kho</label>
+      <input
+        id="stock"
+        type="number"
+        min="0"
+        step="1"
+        formControlName="stock"
+      />
+
+      <app-validation-message
+        [control]="productForm.controls.stock"
+        label="Số lượng tồn kho"
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="category">Danh mục</label>
+      <select id="category" formControlName="category">
+        <option value="">-- Chọn danh mục --</option>
+
+        @for (category of categories; track category.value) {
+          <option [value]="category.value">
+            {{ category.label }}
+          </option>
+        }
+      </select>
+
+      <app-validation-message
+        [control]="productForm.controls.category"
+        label="Danh mục"
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="brand">Thương hiệu</label>
+      <input id="brand" type="text" formControlName="brand" />
+
+      <app-validation-message
+        [control]="productForm.controls.brand"
+        label="Thương hiệu"
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="thumbnail">URL ảnh đại diện</label>
+      <input
+        id="thumbnail"
+        type="url"
+        formControlName="thumbnail"
+        placeholder="https://example.com/image.jpg"
+      />
+
+      <app-validation-message
+        [control]="productForm.controls.thumbnail"
+        label="Ảnh đại diện"
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="description">Mô tả</label>
+      <textarea
+        id="description"
+        rows="4"
+        formControlName="description"
+      ></textarea>
+
+      <app-validation-message
+        [control]="productForm.controls.description"
+        label="Mô tả"
+      />
+    </div>
+
+    <button type="submit" [disabled]="productForm.invalid">Lưu sản phẩm</button>
+  </form>
+</div>

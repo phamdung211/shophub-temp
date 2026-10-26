@@ -9,7 +9,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, NgClass } from '@angular/common';
 import { Product } from '../../../core/model/product.model';
 
 import { VndCurrencyPipe } from '../../pipes/vnd-currency.pipe';
@@ -28,6 +28,7 @@ import { HoverCardDirective } from '../../directives/hover-card.directive';
     TruncatePipe,
     ImageFallbackDirective,
     HoverCardDirective,
+    NgClass,
   ],
   templateUrl: './product-card.component.html',
   styleUrl: './product-card.component.scss',
@@ -36,6 +37,7 @@ export class ProductCardComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ required: true }) product!: Product;
 
   @Output() addToCart = new EventEmitter<Product>();
+  @Output() delete = new EventEmitter<Product>();
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('[ProductCard] ngOnChanges', changes);
@@ -51,5 +53,8 @@ export class ProductCardComponent implements OnInit, OnChanges, OnDestroy {
 
   onBuyClick(): void {
     this.addToCart.emit(this.product);
+  }
+  onDeleteClick(): void {
+    this.delete.emit(this.product);
   }
 }

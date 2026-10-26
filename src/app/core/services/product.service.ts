@@ -165,6 +165,11 @@ export class ProductService {
         product.brand.toLowerCase().includes(normalizedKeyword),
     );
   }
+  deleteProduct(id: Product['id']): void {
+    this.products = this.products.filter((product) => product.id !== id);
+
+    this.saveProducts();
+  }
 
   private saveProducts(): void {
     this.storageService.setItem(this.storageKey, this.products);
@@ -185,5 +190,24 @@ export class ProductService {
     }
 
     return result;
+  }
+
+  buyProduct(id: Product['id']): boolean {
+    const product = this.products.find((item) => item.id === id);
+
+    // Không tìm thấy sản phẩm hoặc đã hết hàng
+    if (!product || product.stock <= 0) {
+      return false;
+    }
+
+    // Trừ một sản phẩm
+    this.products = this.products.map((item) =>
+      item.id === id ? { ...item, stock: item.stock - 1 } : item,
+    );
+
+    // Lưu danh sách mới vào localStorage
+    this.saveProducts();
+
+    return true;
   }
 }

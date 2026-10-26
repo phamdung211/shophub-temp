@@ -36,4 +36,30 @@ export class ProductCatalogComponent {
   reloadProducts(): void {
     this.products = this.productService.getProducts();
   }
+  deleteProduct(product: Product): void {
+    const confirmed = confirm(`Bạn có chắc muốn xóa "${product.title}" không?`);
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.productService.deleteProduct(product.id);
+    this.products = this.productService.getProducts();
+  }
+
+  // onAddToCart(product: Product): void {
+  //   console.log('Đã nhận sản phẩm:', product);
+  // }
+  onAddToCart(product: Product): void {
+    const success = this.productService.buyProduct(product.id);
+
+    if (success) {
+      // Cập nhật danh sách sản phẩm sau khi trừ kho
+      this.products = this.productService.getProducts();
+
+      alert(`Mua ${product.title} thành công!`);
+    } else {
+      alert('Sản phẩm đã hết hàng!');
+    }
+  }
 }

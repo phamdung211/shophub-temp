@@ -27,7 +27,11 @@
 
   <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
     @for (product of filteredProducts; track product.id) {
-      <app-product-card [product]="product" />
+      <app-product-card
+        [product]="product"
+        (addToCart)="onAddToCart($event)"
+        (delete)="deleteProduct($event)"
+      />
     } @empty {
       <p class="col-span-full py-8 text-center text-gray-500">
         Không tìm thấy sản phẩm phù hợp.
