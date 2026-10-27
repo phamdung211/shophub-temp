@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 
 import { DecimalPipe, NgClass } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { Product } from '../../../core/model/product.model';
 
 import { VndCurrencyPipe } from '../../pipes/vnd-currency.pipe';
@@ -23,12 +24,13 @@ import { HoverCardDirective } from '../../directives/hover-card.directive';
   standalone: true,
   imports: [
     DecimalPipe,
+    NgClass,
+    RouterLink,
     VndCurrencyPipe,
     DiscountCalculatorPipe,
     TruncatePipe,
     ImageFallbackDirective,
     HoverCardDirective,
-    NgClass,
   ],
   templateUrl: './product-card.component.html',
   styleUrl: './product-card.component.scss',

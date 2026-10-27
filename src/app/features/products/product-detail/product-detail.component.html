@@ -1,0 +1,203 @@
+<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+  <!-- Breadcrumb -->
+  <nav class="mb-6 flex items-center gap-2 text-sm text-gray-500">
+    <a routerLink="/products" class="hover:text-blue-600 transition flex items-center gap-1">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      Danh sách sản phẩm
+    </a>
+    @if (product) {
+      <span>/</span>
+      <span class="capitalize text-gray-600">{{ product.category }}</span>
+      <span>/</span>
+      <span class="font-medium text-gray-900 truncate max-w-xs">{{ product.title }}</span>
+    }
+  </nav>
+
+  @if (product) {
+    <div class="grid grid-cols-1 gap-10 lg:grid-cols-2 bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100">
+      <!-- Image Gallery -->
+      <div class="flex flex-col gap-4">
+        <div class="relative overflow-hidden rounded-xl bg-gray-100 border border-gray-200 aspect-square flex items-center justify-center">
+          <img
+            [src]="selectedImage || product.thumbnail"
+            [appImageFallback]="'assets/images/product-placeholder.svg'"
+            [alt]="product.title"
+            class="h-full w-full object-contain p-4 transition-transform duration-300 hover:scale-105"
+          />
+
+          @if (product.discountPercentage > 0) {
+            <span class="absolute top-4 left-4 rounded-full bg-red-600 px-3 py-1 text-xs font-bold text-white shadow">
+              -{{ product.discountPercentage }}%
+            </span>
+          }
+        </div>
+
+        <!-- Thumbnails list -->
+        @if (product.images && product.images.length > 1) {
+          <div class="flex gap-3 overflow-x-auto pb-2">
+            @for (img of product.images; track img) {
+              <button
+                type="button"
+                (click)="selectImage(img)"
+                [class.ring-2]="selectedImage === img"
+                [class.ring-blue-600]="selectedImage === img"
+                class="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border border-gray-200 bg-white p-1 transition hover:opacity-80"
+              >
+                <img
+                  [src]="img"
+                  [appImageFallback]="'assets/images/product-placeholder.svg'"
+                  [alt]="product.title"
+                  class="h-full w-full object-cover rounded"
+                />
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Product Information -->
+      <div class="flex flex-col justify-between">
+        <div>
+          <!-- Category & Brand -->
+          <div class="flex items-center gap-2 mb-2">
+            <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 capitalize">
+              {{ product.category }}
+            </span>
+            <span class="text-xs font-medium text-gray-500">
+              Thương hiệu: <strong class="text-gray-800">{{ product.brand }}</strong>
+            </span>
+          </div>
+
+          <!-- Title -->
+          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-3">
+            {{ product.title }}
+          </h1>
+
+          <!-- Rating & Stock Badge -->
+          <div class="flex items-center gap-4 mb-6">
+            <div class="flex items-center gap-1 text-amber-500">
+              <span>⭐</span>
+              <span class="font-bold text-gray-900 text-sm">{{ product.rating }}</span>
+              <span class="text-xs text-gray-400">/ 5.0</span>
+            </div>
+
+            <div class="h-4 w-px bg-gray-200"></div>
+
+            <div>
+              @if (product.stock > 0) {
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">
+                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                  Còn {{ product.stock }} sản phẩm
+                </span>
+              } @else {
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-700 bg-rose-50 px-2.5 py-1 rounded-full">
+                  <span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span>
+                  Tạm hết hàng
+                </span>
+              }
+            </div>
+          </div>
+
+          <!-- Price Display -->
+          <div class="rounded-xl bg-gray-50 p-4 mb-6 border border-gray-100">
+            <div class="flex items-baseline gap-3">
+              @if (product.discountPercentage > 0) {
+                <span class="text-3xl font-extrabold text-red-600">
+                  {{ product.price | discountCalculator: product.discountPercentage | vndCurrency }}
+                </span>
+                <span class="text-base text-gray-400 line-through">
+                  {{ product.price | vndCurrency }}
+                </span>
+                <span class="text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded">
+                  Tiết kiệm {{ product.discountPercentage }}%
+                </span>
+              } @else {
+                <span class="text-3xl font-extrabold text-gray-900">
+                  {{ product.price | vndCurrency }}
+                </span>
+              }
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-6">
+            <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-2">Mô tả sản phẩm</h3>
+            <p class="text-gray-600 leading-relaxed text-sm whitespace-pre-line">
+              {{ product.description }}
+            </p>
+          </div>
+
+          <!-- Quantity selector -->
+          @if (product.stock > 0) {
+            <div class="mb-6">
+              <label class="block text-sm font-semibold text-gray-900 mb-2">Số lượng:</label>
+              <div class="inline-flex items-center border border-gray-300 rounded-lg">
+                <button
+                  type="button"
+                  (click)="decreaseQuantity()"
+                  [disabled]="quantity <= 1"
+                  class="px-3 py-2 text-gray-600 hover:bg-gray-100 disabled:opacity-40 rounded-l-lg transition"
+                >
+                  -
+                </button>
+                <span class="px-4 py-2 text-sm font-semibold text-gray-900 min-w-[40px] text-center">
+                  {{ quantity }}
+                </span>
+                <button
+                  type="button"
+                  (click)="increaseQuantity()"
+                  [disabled]="quantity >= product.stock"
+                  class="px-3 py-2 text-gray-600 hover:bg-gray-100 disabled:opacity-40 rounded-r-lg transition"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-100">
+          <button
+            type="button"
+            (click)="addToCart()"
+            [disabled]="product.stock <= 0"
+            class="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-sm hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+          >
+            <span>🛒</span>
+            {{ product.stock > 0 ? 'Thêm vào giỏ hàng' : 'Hết hàng' }}
+          </button>
+
+          <button
+            type="button"
+            (click)="goBack()"
+            class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-6 py-3.5 text-base font-semibold text-gray-700 hover:bg-gray-50 transition"
+          >
+            Quay lại
+          </button>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <!-- Not Found Card -->
+    <div class="text-center bg-white rounded-2xl p-12 shadow-sm border border-gray-200 max-w-lg mx-auto">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-50 text-amber-500 mb-4">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+      </div>
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">Không tìm thấy sản phẩm</h2>
+      <p class="text-gray-600 mb-6 text-sm">
+        Sản phẩm với mã ID <strong>#{{ id }}</strong> không tồn tại hoặc đã bị gỡ khỏi hệ thống.
+      </p>
+      <a
+        routerLink="/products"
+        class="inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-blue-600 text-white font-medium text-sm hover:bg-blue-700 transition"
+      >
+        ← Quay lại danh mục sản phẩm
+      </a>
+    </div>
+  }
+</div>

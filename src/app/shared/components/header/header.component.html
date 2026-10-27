@@ -1,27 +1,42 @@
-`
-<header class="bg-white shadow-sm">
+<header class="bg-white shadow-sm sticky top-0 z-50">
   <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-    <a href="/" class="text-2xl font-bold text-blue-600"> ShopHub </a>
-
-    <nav class="flex items-center gap-6 text-gray-600">
-      <a href="/" class="transition hover:text-blue-600">Trang chủ</a>
-      <a href="/" class="transition hover:text-blue-600">Sản phẩm</a>
-      <a href="/" class="transition hover:text-blue-600">Liên hệ</a>
-    </nav>
-
-    <a
-      href="/admin/products/new"
-      class="rounded-lg bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
-    >
-      Quản lý sản phẩm
+    <a routerLink="/products" class="text-2xl font-bold text-blue-600 flex items-center gap-2">
+      <span>🛍️</span>
+      <span>ShopHub</span>
     </a>
 
-    <button
-      type="button"
-      class="rounded-lg bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
-    >
-      Giỏ hàng
-    </button>
+    <nav class="flex items-center gap-6 text-gray-600 font-medium">
+      <a
+        routerLink="/products"
+        routerLinkActive="text-blue-600 font-semibold"
+        class="transition hover:text-blue-600"
+      >
+        Sản phẩm
+      </a>
+      <a
+        routerLink="/admin/products/create"
+        routerLinkActive="text-blue-600 font-semibold"
+        class="transition hover:text-blue-600"
+      >
+        Thêm sản phẩm
+      </a>
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <a
+        routerLink="/admin/products/create"
+        class="rounded-lg bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-600 transition hover:bg-blue-100"
+      >
+        + Thêm mới
+      </a>
+
+      <button
+        type="button"
+        class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 flex items-center gap-2 shadow-sm"
+      >
+        <span>🛒</span>
+        <span>Giỏ hàng</span>
+      </button>
+    </div>
   </div>
 </header>
-`
