@@ -11,13 +11,13 @@ import {
 
 import { DecimalPipe, NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Product } from '../../../core/model/product.model';
+import { Product } from '../../../../core/model/product.model';
 
-import { VndCurrencyPipe } from '../../pipes/vnd-currency.pipe';
-import { DiscountCalculatorPipe } from '../../pipes/discount-calculator.pipe';
-import { TruncatePipe } from '../../pipes/truncate.pipe';
-import { ImageFallbackDirective } from '../../directives/image-fallback.directive';
-import { HoverCardDirective } from '../../directives/hover-card.directive';
+import { VndCurrencyPipe } from '../../../../shared/pipes/vnd-currency.pipe';
+import { DiscountCalculatorPipe } from '../../../../shared/pipes/discount-calculator.pipe';
+import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
+import { ImageFallbackDirective } from '../../../../shared/directives/image-fallback.directive';
+import { HoverCardDirective } from '../../../../shared/directives/hover-card.directive';
 
 @Component({
   selector: 'app-product-card',
