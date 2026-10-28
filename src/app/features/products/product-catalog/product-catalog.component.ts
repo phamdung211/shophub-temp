@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Product } from '../../../core/model/product.model';
 import { ProductService } from '../../../core/services/product.service';
-import { ProductCardComponent } from '../../../shared/components/product-card/product-card.component';
+import { ProductCardComponent } from '../components/product-card/product-card.component';
 
 @Component({
   selector: 'app-product-catalog',
