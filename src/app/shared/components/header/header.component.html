@@ -23,6 +23,22 @@
     </nav>
 
     <div class="flex items-center gap-3">
+      <!-- Nút giả lập Đăng nhập / Đăng xuất để test authGuard -->
+      <button
+        type="button"
+        (click)="toggleLogin()"
+        [class]="authService.isLoggedIn()
+          ? 'rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 text-xs font-semibold hover:bg-emerald-100 transition'
+          : 'rounded-lg bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1.5 text-xs font-semibold hover:bg-amber-100 transition'"
+        title="Nhấn để đổi trạng thái đăng nhập test Auth Guard"
+      >
+        @if (authService.isLoggedIn()) {
+          <span>🟢 Đã đăng nhập (Admin) - Click để Thoát</span>
+        } @else {
+          <span>🔒 Chưa đăng nhập - Click để Đăng nhập Demo</span>
+        }
+      </button>
+
       <a
         routerLink="/admin/products/create"
         class="rounded-lg bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-600 transition hover:bg-blue-100"

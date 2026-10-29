@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
-import { ProductCatalogComponent } from './features/products/product-catalog/product-catalog.component';
-import { ProductFormComponent } from './features/admin/product-form/product-form.component';
-import { ProductDetailComponent } from './features/products/product-detail/product-detail.component';
-import { NotFoundComponent } from './features/not-found/not-found.component';
+import { authGuard } from './core/guards/auth.guard';
+import { unsavedChangesGuard } from './core/guards/unsaved-changes.guard';
 
 export const routes: Routes = [
   {
@@ -12,15 +10,26 @@ export const routes: Routes = [
   },
   {
     path: 'products',
-    component: ProductCatalogComponent,
+    loadComponent: () =>
+      import('./features/products/product-catalog/product-catalog.component').then(
+        (m) => m.ProductCatalogComponent
+      ),
   },
   {
     path: 'products/:id',
-    component: ProductDetailComponent,
+    loadComponent: () =>
+      import('./features/products/product-detail/product-detail.component').then(
+        (m) => m.ProductDetailComponent
+      ),
   },
   {
     path: 'admin/products/create',
-    component: ProductFormComponent,
+    canActivate: [authGuard],
+    canDeactivate: [unsavedChangesGuard],
+    loadComponent: () =>
+      import('./features/admin/product-form/product-form.component').then(
+        (m) => m.ProductFormComponent
+      ),
   },
   {
     path: 'admin/products/new',
@@ -28,6 +37,9 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    component: NotFoundComponent,
+    loadComponent: () =>
+      import('./features/not-found/not-found.component').then(
+        (m) => m.NotFoundComponent
+      ),
   },
 ];
