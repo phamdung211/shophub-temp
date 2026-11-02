@@ -6,6 +6,8 @@ import { ProductService } from '../../../core/services/product.service';
 import { VndCurrencyPipe } from '../../../shared/pipes/vnd-currency.pipe';
 import { DiscountCalculatorPipe } from '../../../shared/pipes/discount-calculator.pipe';
 import { ImageFallbackDirective } from '../../../shared/directives/image-fallback.directive';
+import { ProductReviewsComponent } from './components/product-reviews/product-reviews.component';
+import { RelatedProductsComponent } from './components/related-products/related-products.component';
 
 @Component({
   selector: 'app-product-detail',
@@ -16,6 +18,8 @@ import { ImageFallbackDirective } from '../../../shared/directives/image-fallbac
     VndCurrencyPipe,
     DiscountCalculatorPipe,
     ImageFallbackDirective,
+    ProductReviewsComponent,
+    RelatedProductsComponent,
   ],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss',

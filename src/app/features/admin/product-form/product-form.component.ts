@@ -5,12 +5,14 @@ import { Router } from '@angular/router';
 import { Product } from '../../../core/model/product.model';
 import { ProductService } from '../../../core/services/product.service';
 import { ValidationMessageComponent } from '../../../shared/components/validation-message/validation-message.component';
+import { HasUnsavedChanges } from '../../../core/guards/unsaved-changes.guard';
 
 import {
   imageUrlValidator,
   integerMinZeroValidator,
   priceDiscountValidator,
 } from './product-form.validators';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-product-form',
@@ -19,10 +21,12 @@ import {
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.scss',
 })
-export class ProductFormComponent {
+export class ProductFormComponent implements HasUnsavedChanges {
   private fb = inject(FormBuilder);
   private productService = inject(ProductService);
   private router = inject(Router);
+  private authService = inject(AuthService);
+  isSubmitted = false;
 
   categories = [
     { label: 'Laptop', value: 'laptops' },
@@ -57,7 +61,19 @@ export class ProductFormComponent {
     },
   );
 
+  hasUnsavedChanges(): boolean {
+    if (this.isSubmitted) {
+      return false;
+    }
+    return this.productForm.dirty;
+  }
+
   onSubmit(): void {
+    if (!this.authService.isLoggedIn()) {
+      alert('Phiên làm việc đã hết hạn. Bạn cần đăng nhập Admin để lưu sản phẩm!');
+      this.router.navigate(['/products']);
+      return;
+    }
     if (this.productForm.invalid) {
       this.productForm.markAllAsTouched();
       return;
@@ -87,6 +103,7 @@ export class ProductFormComponent {
     };
 
     this.productService.addProduct(newProduct);
+    this.isSubmitted = true;
 
     void this.router.navigate(['/']);
   }

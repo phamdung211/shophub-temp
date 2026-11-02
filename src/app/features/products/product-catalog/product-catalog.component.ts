@@ -2,11 +2,12 @@ import { Component, inject } from '@angular/core';
 import { Product } from '../../../core/model/product.model';
 import { ProductService } from '../../../core/services/product.service';
 import { ProductCardComponent } from '../components/product-card/product-card.component';
+import { ProductFilterBarComponent } from '../product-filter-bar/product-filter-bar.component';
 
 @Component({
   selector: 'app-product-catalog',
   standalone: true,
-  imports: [ProductCardComponent],
+  imports: [ProductCardComponent, ProductFilterBarComponent],
   templateUrl: './product-catalog.component.html',
   styleUrl: './product-catalog.component.scss',
 })
@@ -36,6 +37,7 @@ export class ProductCatalogComponent {
   reloadProducts(): void {
     this.products = this.productService.getProducts();
   }
+
   deleteProduct(product: Product): void {
     const confirmed = confirm(`Bạn có chắc muốn xóa "${product.title}" không?`);
 
@@ -47,16 +49,11 @@ export class ProductCatalogComponent {
     this.products = this.productService.getProducts();
   }
 
-  // onAddToCart(product: Product): void {
-  //   console.log('Đã nhận sản phẩm:', product);
-  // }
   onAddToCart(product: Product): void {
     const success = this.productService.buyProduct(product.id);
 
     if (success) {
-      // Cập nhật danh sách sản phẩm sau khi trừ kho
       this.products = this.productService.getProducts();
-
       alert(`Mua ${product.title} thành công!`);
     } else {
       alert('Sản phẩm đã hết hàng!');
