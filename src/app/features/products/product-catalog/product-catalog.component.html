@@ -1,29 +1,28 @@
 <section class="container mx-auto px-4 py-8">
-  <h2 class="mb-2 text-2xl font-bold">Sản phẩm nổi bật</h2>
-
-  <p class="mb-6 text-gray-600">Khám phá các sản phẩm tại ShopHub.</p>
-
-  <div class="mb-6 flex flex-wrap gap-4">
-    <input
-      type="text"
-      placeholder="Tìm kiếm sản phẩm..."
-      class="rounded-lg border px-4 py-2"
-      [value]="searchKeyword"
-      (input)="onSearchChange($any($event.target).value)"
-    />
-
-    <select
-      class="rounded-lg border px-4 py-2"
-      [value]="selectedCategory"
-      (change)="onCategoryChange($any($event.target).value)"
-    >
-      <option value="all">Tất cả danh mục</option>
-      <option value="laptops">Laptop</option>
-      <option value="accessories">Phụ kiện</option>
-      <option value="smartphones">Điện thoại</option>
-      <option value="fragrances">Nước hoa</option>
-    </select>
+  <div class="mb-6">
+    <h2 class="text-2xl font-bold text-gray-900">Sản phẩm nổi bật</h2>
+    <p class="text-sm text-gray-500 mt-1">Khám phá các sản phẩm công nghệ & phụ kiện tại ShopHub.</p>
   </div>
+
+  <!-- Dumb Component: Bộ lọc & Thanh tìm kiếm tức thì RxJS Live Search -->
+  <app-product-filter-bar
+    (searchChange)="onSearchChange($event)"
+    (categoryChange)="onCategoryChange($event)"
+  />
+
+  @if (searchKeyword) {
+    <div class="mb-6 flex items-center justify-between rounded-xl bg-blue-50/70 px-4 py-2.5 border border-blue-100 text-sm text-blue-900">
+      <div class="flex items-center gap-2">
+        <span>🔍</span>
+        <span>
+          Kết quả tìm kiếm cho: "<strong>{{ searchKeyword }}</strong>"
+        </span>
+      </div>
+      <span class="font-medium text-xs bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full">
+        Tìm thấy {{ filteredProducts.length }} sản phẩm
+      </span>
+    </div>
+  }
 
   <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
     @for (product of filteredProducts; track product.id) {
@@ -33,9 +32,15 @@
         (delete)="deleteProduct($event)"
       />
     } @empty {
-      <p class="col-span-full py-8 text-center text-gray-500">
-        Không tìm thấy sản phẩm phù hợp.
-      </p>
+      <div class="col-span-full py-16 text-center">
+        <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-2xl text-gray-400">
+          🔍
+        </div>
+        <h3 class="text-base font-semibold text-gray-900 mb-1">Không tìm thấy sản phẩm phù hợp</h3>
+        <p class="text-sm text-gray-500">
+          Hãy thử tìm kiếm bằng từ khóa khác hoặc chuyển sang danh mục khác.
+        </p>
+      </div>
     }
   </div>
 </section>

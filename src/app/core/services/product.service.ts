@@ -165,6 +165,11 @@ export class ProductService {
         product.brand.toLowerCase().includes(normalizedKeyword),
     );
   }
+
+  filterByKeyword(keyword: string): Product[] {
+    return this.searchProducts(keyword);
+  }
+
   deleteProduct(id: Product['id']): void {
     this.products = this.products.filter((product) => product.id !== id);
 
