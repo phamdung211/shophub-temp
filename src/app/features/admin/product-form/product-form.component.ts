@@ -12,6 +12,7 @@ import {
   integerMinZeroValidator,
   priceDiscountValidator,
 } from './product-form.validators';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-product-form',
@@ -24,7 +25,7 @@ export class ProductFormComponent implements HasUnsavedChanges {
   private fb = inject(FormBuilder);
   private productService = inject(ProductService);
   private router = inject(Router);
-
+  private authService = inject(AuthService);
   isSubmitted = false;
 
   categories = [
@@ -68,6 +69,11 @@ export class ProductFormComponent implements HasUnsavedChanges {
   }
 
   onSubmit(): void {
+    if (!this.authService.isLoggedIn()) {
+      alert('Phiên làm việc đã hết hạn. Bạn cần đăng nhập Admin để lưu sản phẩm!');
+      this.router.navigate(['/products']);
+      return;
+    }
     if (this.productForm.invalid) {
       this.productForm.markAllAsTouched();
       return;
