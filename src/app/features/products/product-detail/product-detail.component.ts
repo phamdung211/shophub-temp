@@ -34,6 +34,7 @@ export class ProductDetailComponent implements OnInit {
   product?: Product;
   selectedImage: string = '';
   quantity: number = 1;
+  isLoading = false;
 
   ngOnInit(): void {
     this.loadProduct();
@@ -42,11 +43,20 @@ export class ProductDetailComponent implements OnInit {
   loadProduct(): void {
     const numericId = Number(this.id);
     if (!Number.isNaN(numericId)) {
-      this.product = this.productService.getProductById(numericId);
-      if (this.product) {
-        this.selectedImage =
-          this.product.images?.[0] || this.product.thumbnail || '';
-      }
+      this.isLoading = true;
+      this.productService.getProductById(numericId).subscribe({
+        next: (data) => {
+          this.product = data;
+          this.selectedImage =
+            data.images?.[0] || data.thumbnail || '';
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Lỗi khi tải chi tiết sản phẩm:', err);
+          this.product = undefined;
+          this.isLoading = false;
+        },
+      });
     }
   }
 

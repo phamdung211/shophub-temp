@@ -1,41 +1,172 @@
 <section class="container mx-auto px-4 py-8">
-  <div class="mb-6">
-    <h2 class="text-2xl font-bold text-gray-900">Sản phẩm nổi bật</h2>
-    <p class="text-sm text-gray-500 mt-1">Khám phá các sản phẩm công nghệ & phụ kiện tại ShopHub.</p>
+  <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div>
+      <h2 class="text-2xl font-bold text-gray-900 tracking-tight">Sản phẩm nổi bật</h2>
+      <p class="text-sm text-gray-500 mt-1">
+        Dữ liệu trực tiếp từ DummyJSON REST API • Trang {{ currentPage }} / {{ totalPages }}
+      </p>
+    </div>
   </div>
 
   <!-- Dumb Component: Bộ lọc & Thanh tìm kiếm tức thì RxJS Live Search -->
-  <app-product-filter-bar (searchChange)="onSearchChange($event)" (categoryChange)="onCategoryChange($event)" />
+  <app-product-filter-bar
+    (searchChange)="onSearchChange($event)"
+    (categoryChange)="onCategoryChange($event)"
+  />
 
+  <!-- Thông báo trạng thái tìm kiếm / lọc -->
   @if (searchKeyword) {
-  <div
-    class="mb-6 flex items-center justify-between rounded-xl bg-blue-50/70 px-4 py-2.5 border border-blue-100 text-sm text-blue-900">
-    <div class="flex items-center gap-2">
-      <span>🔍</span>
-      <span>
-        Kết quả tìm kiếm cho: "<strong>{{ searchKeyword }}</strong>"
+    <div
+      class="mb-6 flex items-center justify-between rounded-xl bg-blue-50/70 px-4 py-2.5 border border-blue-100 text-sm text-blue-900"
+    >
+      <div class="flex items-center gap-2">
+        <span>🔍</span>
+        <span>
+          Kết quả tìm kiếm cho: "<strong>{{ searchKeyword }}</strong>"
+        </span>
+      </div>
+      <span class="font-medium text-xs bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full">
+        Tìm thấy {{ totalProducts }} sản phẩm
       </span>
     </div>
-    <span class="font-medium text-xs bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full">
-      Tìm thấy {{ filteredProducts.length }} sản phẩm
-    </span>
-  </div>
   }
 
-  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-    @for (product of filteredProducts; track product.id) {
-    <app-product-card [product]="product" (addToCart)="onAddToCart($event)" (delete)="deleteProduct($event)" />
-    } @empty {
-    <div class="col-span-full py-16 text-center">
-      <div
-        class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-2xl text-gray-400">
-        🔍
-      </div>
-      <h3 class="text-base font-semibold text-gray-900 mb-1">Không tìm thấy sản phẩm phù hợp</h3>
-      <p class="text-sm text-gray-500">
-        Hãy thử tìm kiếm bằng từ khóa khác hoặc chuyển sang danh mục khác.
+  <!-- Trạng thái lỗi mạng / API -->
+  @if (errorMessage) {
+    <div class="rounded-xl border border-red-200 bg-red-50 p-6 text-center my-6">
+      <div class="text-3xl mb-2">⚠️</div>
+      <h3 class="text-base font-semibold text-red-800">{{ errorMessage }}</h3>
+      <p class="text-xs text-red-600 mt-1 mb-4">
+        Vui lòng kiểm tra lại kết nối Internet của bạn hoặc thử lại sau vài giây.
       </p>
+      <button
+        type="button"
+        (click)="loadProducts()"
+        class="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 transition shadow-sm"
+      >
+        <span>🔄</span> Thử lại
+      </button>
     </div>
+  }
+
+  <!-- Hiệu ứng Skeleton Loading khi đang tải dữ liệu -->
+  @if (isLoading) {
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      @for (item of skeletonArray; track $index) {
+        <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm animate-pulse">
+          <!-- Skeleton ảnh thumbnail -->
+          <div class="h-48 w-full rounded-lg bg-gray-200"></div>
+
+          <!-- Skeleton tên sản phẩm -->
+          <div class="mt-3 h-5 w-3/4 rounded bg-gray-200"></div>
+
+          <!-- Skeleton mô tả -->
+          <div class="mt-2 h-4 w-full rounded bg-gray-100"></div>
+          <div class="mt-1 h-4 w-2/3 rounded bg-gray-100"></div>
+
+          <!-- Skeleton giá bán -->
+          <div class="mt-4 h-6 w-1/3 rounded bg-gray-200"></div>
+
+          <!-- Skeleton tình trạng tồn kho -->
+          <div class="mt-2 h-4 w-1/4 rounded bg-gray-100"></div>
+
+          <!-- Skeleton nút bấm -->
+          <div class="mt-4 flex gap-2">
+            <div class="h-10 flex-1 rounded-lg bg-gray-200"></div>
+            <div class="h-10 w-16 rounded-lg bg-gray-200"></div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else if (!errorMessage) {
+    <!-- Danh sách sản phẩm thực tế -->
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      @for (product of products; track product.id) {
+        <app-product-card
+          [product]="product"
+          (addToCart)="onAddToCart($event)"
+          (delete)="deleteProduct($event)"
+        />
+      } @empty {
+        <div class="col-span-full py-16 text-center">
+          <div
+            class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-2xl text-gray-400"
+          >
+            🔍
+          </div>
+          <h3 class="text-base font-semibold text-gray-900 mb-1">
+            Không tìm thấy sản phẩm phù hợp
+          </h3>
+          <p class="text-sm text-gray-500">
+            Hãy thử tìm kiếm bằng từ khóa khác hoặc chuyển sang danh mục khác.
+          </p>
+        </div>
+      }
+    </div>
+
+    <!-- Thanh phân trang (Pagination) -->
+    @if (totalPages > 1 && products.length > 0) {
+      <div
+        class="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-gray-200 pt-6"
+      >
+        <!-- Chỉ số hiển thị -->
+        <p class="text-sm text-gray-600">
+          Hiển thị
+          <span class="font-semibold text-gray-900">{{ startIndex }}</span>
+          -
+          <span class="font-semibold text-gray-900">{{ endIndex }}</span>
+          trên tổng số
+          <span class="font-semibold text-gray-900">{{ totalProducts }}</span>
+          sản phẩm
+        </p>
+
+        <!-- Các nút điều hướng trang -->
+        <nav class="inline-flex items-center gap-1 shadow-sm rounded-lg" aria-label="Pagination">
+          <!-- Nút Trang trước -->
+          <button
+            type="button"
+            (click)="prevPage()"
+            [disabled]="currentPage === 1 || isLoading"
+            class="inline-flex items-center gap-1 rounded-l-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
+          >
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span>Trước</span>
+          </button>
+
+          <!-- Các nút số trang -->
+          @for (page of visiblePages; track page) {
+            <button
+              type="button"
+              (click)="goToPage(page)"
+              [class.bg-blue-600]="page === currentPage"
+              [class.text-white]="page === currentPage"
+              [class.border-blue-600]="page === currentPage"
+              [class.font-bold]="page === currentPage"
+              [class.bg-white]="page !== currentPage"
+              [class.text-gray-700]="page !== currentPage"
+              [class.hover:bg-gray-50]="page !== currentPage"
+              class="border border-gray-300 px-3.5 py-2 text-sm font-medium transition"
+            >
+              {{ page }}
+            </button>
+          }
+
+          <!-- Nút Trang sau -->
+          <button
+            type="button"
+            (click)="nextPage()"
+            [disabled]="currentPage === totalPages || isLoading"
+            class="inline-flex items-center gap-1 rounded-r-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
+          >
+            <span>Sau</span>
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </nav>
+      </div>
     }
-  </div>
+  }
 </section>

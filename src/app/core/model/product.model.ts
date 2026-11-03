@@ -1,4 +1,4 @@
-import type { BaseEntity } from "./base.model";
+import type { BaseEntity } from './base.model';
 
 export interface Product extends BaseEntity {
   title: string;
@@ -7,8 +7,14 @@ export interface Product extends BaseEntity {
   discountPercentage: number;
   rating: number;
   stock: number;
-  brand: string;
+  brand?: string;
   category: string;
   thumbnail: string;
   images: string[];
+}
+
+export interface ProductCategory {
+  slug: string;
+  name: string;
+  url?: string;
 }

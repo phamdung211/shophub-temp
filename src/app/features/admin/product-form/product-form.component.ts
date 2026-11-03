@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -21,17 +21,19 @@ import { AuthService } from '../../../core/services/auth.service';
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.scss',
 })
-export class ProductFormComponent implements HasUnsavedChanges {
+export class ProductFormComponent implements OnInit, HasUnsavedChanges {
   private fb = inject(FormBuilder);
   private productService = inject(ProductService);
   private router = inject(Router);
   private authService = inject(AuthService);
-  isSubmitted = false;
 
-  categories = [
+  isSubmitted = false;
+  isSubmitting = false;
+
+  categories: { label: string; value: string }[] = [
     { label: 'Laptop', value: 'laptops' },
     { label: 'Điện thoại', value: 'smartphones' },
-    { label: 'Phụ kiện', value: 'accessories' },
+    { label: 'Phụ kiện', value: 'mobile-accessories' },
     { label: 'Nước hoa', value: 'fragrances' },
   ];
 
@@ -61,6 +63,21 @@ export class ProductFormComponent implements HasUnsavedChanges {
     },
   );
 
+  ngOnInit(): void {
+    // Tải danh mục thực tế từ API DummyJSON
+    this.productService.getCategories().subscribe({
+      next: (apiCats) => {
+        if (apiCats && apiCats.length > 0) {
+          this.categories = apiCats.map((c) => ({
+            label: c.name || c.slug,
+            value: c.slug,
+          }));
+        }
+      },
+      error: (err) => console.warn('Không thể tải categories cho form:', err),
+    });
+  }
+
   hasUnsavedChanges(): boolean {
     if (this.isSubmitted) {
       return false;
@@ -80,21 +97,13 @@ export class ProductFormComponent implements HasUnsavedChanges {
     }
 
     const value = this.productForm.getRawValue();
-    const products = this.productService.getProducts();
 
-    const nextId =
-      products.reduce(
-        (maxId, product) => Math.max(maxId, Number(product.id)),
-        0,
-      ) + 1;
-
-    const newProduct: Product = {
-      id: nextId,
+    const newProduct: Partial<Product> = {
       title: value.title!,
       description: value.description!,
       price: Number(value.price),
       discountPercentage: Number(value.discountPercentage),
-      rating: 0,
+      rating: 5,
       stock: Number(value.stock),
       brand: value.brand!,
       category: value.category!,
@@ -102,9 +111,21 @@ export class ProductFormComponent implements HasUnsavedChanges {
       images: [value.thumbnail!],
     };
 
-    this.productService.addProduct(newProduct);
-    this.isSubmitted = true;
-
-    void this.router.navigate(['/']);
+    this.isSubmitting = true;
+    this.productService.addProduct(newProduct).subscribe({
+      next: (created) => {
+        alert(
+          `Thêm sản phẩm "${created.title}" thành công qua API DummyJSON! (Mã trả về: #${created.id})`,
+        );
+        this.isSubmitted = true;
+        this.isSubmitting = false;
+        void this.router.navigate(['/products']);
+      },
+      error: (err) => {
+        console.error('Lỗi khi thêm sản phẩm:', err);
+        alert('Có lỗi xảy ra khi gọi DummyJSON API!');
+        this.isSubmitting = false;
+      },
+    });
   }
 }

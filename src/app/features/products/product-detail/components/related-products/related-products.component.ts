@@ -76,18 +76,19 @@ export class RelatedProductsComponent implements OnInit {
   relatedProducts: Product[] = [];
 
   ngOnInit(): void {
-    const all = this.productService.getProducts();
-    this.relatedProducts = all
-      .filter((p) => p.id !== this.currentProductId && (!this.category || p.category === this.category))
-      .slice(0, 4);
+    const request$ = this.category
+      ? this.productService.getProductsByCategory(this.category, 1, 6)
+      : this.productService.getProducts(1, 6);
 
-    // Nếu không đủ sản phẩm cùng loại, lấy thêm các sản phẩm khác
-    if (this.relatedProducts.length < 4) {
-      const remaining = all
-        .filter((p) => p.id !== this.currentProductId && !this.relatedProducts.some((r) => r.id === p.id))
-        .slice(0, 4 - this.relatedProducts.length);
-      this.relatedProducts = [...this.relatedProducts, ...remaining];
-    }
+    request$.subscribe({
+      next: (res) => {
+        this.relatedProducts = res.products
+          .filter((p) => p.id !== this.currentProductId)
+          .slice(0, 4);
+      },
+      error: (err) => {
+        console.warn('Không thể tải sản phẩm liên quan:', err);
+      },
+    });
   }
 }
-

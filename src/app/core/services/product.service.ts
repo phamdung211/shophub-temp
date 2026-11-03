@@ -1,218 +1,109 @@
 import { Injectable, inject } from '@angular/core';
-import { Product } from '../model/product.model';
-import { StorageService } from './storage.service';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Product, ProductCategory } from '../model/product.model';
+import { PaginatedResponse } from '../model/api-response.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
-  private storageService = inject(StorageService);
+  private http = inject(HttpClient);
+  private readonly apiUrl = 'https://dummyjson.com/products';
 
-  private readonly storageKey = 'shophub_products';
+  /**
+   * Lấy danh sách sản phẩm có phân trang từ DummyJSON API
+   * @param page Số trang hiện tại (bắt đầu từ 1)
+   * @param limit Số lượng sản phẩm mỗi trang
+   */
+  getProducts(page: number = 1, limit: number = 8): Observable<PaginatedResponse<Product>> {
+    const skip = Math.max(0, (page - 1) * limit);
+    const params = new HttpParams()
+      .set('limit', limit.toString())
+      .set('skip', skip.toString());
 
-  private readonly initialProducts: Product[] = [
-    {
-      id: 1,
-      title: 'Laptop ASUS',
-      description: 'Laptop phục vụ học tập và làm việc',
-      price: 2000000,
-      discountPercentage: 15,
-      rating: 4.8,
-      stock: 10,
-      brand: 'ASUS',
-      category: 'laptops',
-      thumbnail: 'https://placehold.co/600x400?text=Laptop',
-      images: ['https://placehold.co/600x400?text=Laptop'],
-    },
-    {
-      id: 2,
-      title: 'Tai nghe không dây',
-      description: 'Tai nghe không dây chất lượng cao',
-      price: 1200000,
-      discountPercentage: 5,
-      rating: 4.5,
-      stock: 20,
-      brand: 'Sony',
-      category: 'accessories',
-      thumbnail: 'https://placehold.co/600x400?text=Headphones',
-      images: ['https://placehold.co/600x400?text=Headphones'],
-    },
-    {
-      id: 3,
-      title: 'Bàn phím cơ',
-      description: 'Bàn phím cơ dành cho chơi game',
-      price: 850000,
-      discountPercentage: 20,
-      rating: 4.6,
-      stock: 0,
-      brand: 'Logitech',
-      category: 'accessories',
-      thumbnail: 'https://placehold.co/600x400?text=Keyboard',
-      images: ['https://placehold.co/600x400?text=Keyboard'],
-    },
-    {
-      id: 4,
-      title: 'Điện thoại Samsung',
-      description: 'Điện thoại thông minh',
-      price: 12000000,
-      discountPercentage: 12,
-      rating: 4.7,
-      stock: 15,
-      brand: 'Samsung',
-      category: 'smartphones',
-      thumbnail: 'https://placehold.co/600x400?text=Samsung',
-      images: ['https://placehold.co/600x400?text=Samsung'],
-    },
-    {
-      id: 5,
-      title: 'Laptop Lenovo',
-      description: 'Laptop văn phòng',
-      price: 16000000,
-      discountPercentage: 8,
-      rating: 4.4,
-      stock: 7,
-      brand: 'Lenovo',
-      category: 'laptops',
-      thumbnail: 'https://placehold.co/600x400?text=Lenovo',
-      images: ['https://placehold.co/600x400?text=Lenovo'],
-    },
-    {
-      id: 6,
-      title: 'Nước hoa',
-      description: 'Nước hoa sử dụng hằng ngày',
-      price: 950000,
-      discountPercentage: 18,
-      rating: 4.3,
-      stock: 12,
-      brand: 'Dior',
-      category: 'fragrances',
-      thumbnail: 'https://placehold.co/600x400?text=Perfume',
-      images: ['https://placehold.co/600x400?text=Perfume'],
-    },
-    {
-      id: 7,
-      title: 'Chuột không dây',
-      description: 'Chuột không dây tiện lợi',
-      price: 450000,
-      discountPercentage: 10,
-      rating: 4.2,
-      stock: 25,
-      brand: 'Logitech',
-      category: 'accessories',
-      thumbnail: 'https://placehold.co/600x400?text=Mouse',
-      images: ['https://placehold.co/600x400?text=Mouse'],
-    },
-    {
-      id: 8,
-      title: 'Điện thoại Xiaomi',
-      description: 'Điện thoại thông minh hiệu năng tốt',
-      price: 7500000,
-      discountPercentage: 25,
-      rating: 4.6,
-      stock: 0,
-      brand: 'Xiaomi',
-      category: 'smartphones',
-      thumbnail: 'https://placehold.co/600x400?text=Xiaomi',
-      images: ['https://placehold.co/600x400?text=Xiaomi'],
-    },
-  ];
-
-  private products: Product[] = this.storageService.getItem<Product[]>(
-    this.storageKey,
-    this.initialProducts,
-  );
-
-  constructor() {
-    if (!this.storageService.hasItem(this.storageKey)) {
-      this.saveProducts();
-    }
+    return this.http.get<PaginatedResponse<Product>>(this.apiUrl, { params });
   }
 
-  getProducts(): Product[] {
-    return [...this.products];
+  /**
+   * Lấy thông tin chi tiết một sản phẩm theo ID
+   * @param id ID của sản phẩm
+   */
+  getProductById(id: number | string): Observable<Product> {
+    return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
 
-  getProductById(id: Product['id']): Product | undefined {
-    return this.products.find((product) => product.id === id);
+  /**
+   * Tìm kiếm sản phẩm server-side theo từ khóa có hỗ trợ phân trang
+   * @param keyword Từ khóa tìm kiếm
+   * @param page Số trang hiện tại
+   * @param limit Số lượng sản phẩm mỗi trang
+   */
+  searchProducts(
+    keyword: string,
+    page: number = 1,
+    limit: number = 8,
+  ): Observable<PaginatedResponse<Product>> {
+    const skip = Math.max(0, (page - 1) * limit);
+    const params = new HttpParams()
+      .set('q', keyword.trim())
+      .set('limit', limit.toString())
+      .set('skip', skip.toString());
+
+    return this.http.get<PaginatedResponse<Product>>(`${this.apiUrl}/search`, { params });
   }
 
-  addProduct(product: Product): void {
-    this.products = [...this.products, product];
-    this.saveProducts();
-  }
+  /**
+   * Lọc sản phẩm theo danh mục từ API
+   * @param category Slug của danh mục (ví dụ 'smartphones', 'laptops')
+   * @param page Số trang hiện tại
+   * @param limit Số lượng sản phẩm mỗi trang
+   */
+  getProductsByCategory(
+    category: string,
+    page: number = 1,
+    limit: number = 8,
+  ): Observable<PaginatedResponse<Product>> {
+    const skip = Math.max(0, (page - 1) * limit);
+    const params = new HttpParams()
+      .set('limit', limit.toString())
+      .set('skip', skip.toString());
 
-  filterByCategory(category: string): Product[] {
-    if (!category || category === 'all') {
-      return this.getProducts();
-    }
-
-    return this.products.filter(
-      (product) => product.category.toLowerCase() === category.toLowerCase(),
+    return this.http.get<PaginatedResponse<Product>>(
+      `${this.apiUrl}/category/${encodeURIComponent(category)}`,
+      { params },
     );
   }
 
-  searchProducts(keyword: string): Product[] {
-    const normalizedKeyword = keyword.trim().toLowerCase();
+  /**
+   * Lấy danh sách toàn bộ danh mục sản phẩm từ DummyJSON (bao gồm slug và name)
+   */
+  getCategories(): Observable<ProductCategory[]> {
+    return this.http.get<ProductCategory[]>(`${this.apiUrl}/categories`);
+  }
 
-    if (!normalizedKeyword) {
-      return this.getProducts();
-    }
+  /**
+   * Lấy danh sách tên/slug danh mục dạng mảng string
+   */
+  getCategoryList(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/category-list`);
+  }
 
-    return this.products.filter(
-      (product) =>
-        product.title.toLowerCase().includes(normalizedKeyword) ||
-        product.description.toLowerCase().includes(normalizedKeyword) ||
-        product.brand.toLowerCase().includes(normalizedKeyword),
+  /**
+   * Thêm sản phẩm mới qua API POST
+   * @param product Dữ liệu sản phẩm mới
+   */
+  addProduct(product: Partial<Product>): Observable<Product> {
+    return this.http.post<Product>(`${this.apiUrl}/add`, product);
+  }
+
+  /**
+   * Xóa sản phẩm qua API DELETE
+   * @param id ID của sản phẩm cần xóa
+   */
+  deleteProduct(id: number | string): Observable<Product & { isDeleted?: boolean; deletedOn?: string }> {
+    return this.http.delete<Product & { isDeleted?: boolean; deletedOn?: string }>(
+      `${this.apiUrl}/${id}`,
     );
-  }
-
-  filterByKeyword(keyword: string): Product[] {
-    return this.searchProducts(keyword);
-  }
-
-  deleteProduct(id: Product['id']): void {
-    this.products = this.products.filter((product) => product.id !== id);
-
-    this.saveProducts();
-  }
-
-  private saveProducts(): void {
-    this.storageService.setItem(this.storageKey, this.products);
-  }
-
-  getFilteredProducts(category: string, keyword: string): Product[] {
-    let result = this.filterByCategory(category);
-
-    const normalizedKeyword = keyword.trim().toLowerCase();
-
-    if (normalizedKeyword) {
-      result = result.filter(
-        (product) =>
-          product.title.toLowerCase().includes(normalizedKeyword) ||
-          product.description.toLowerCase().includes(normalizedKeyword) ||
-          product.brand.toLowerCase().includes(normalizedKeyword),
-      );
-    }
-
-    return result;
-  }
-
-  buyProduct(id: Product['id']): boolean {
-    const product = this.products.find((item) => item.id === id);
-
-    // Không tìm thấy sản phẩm hoặc đã hết hàng
-    if (!product || product.stock <= 0) {
-      return false;
-    }
-
-    // Trừ một sản phẩm
-    this.products = this.products.map((item) =>
-      item.id === id ? { ...item, stock: item.stock - 1 } : item,
-    );
-
-    // Lưu danh sách mới vào localStorage
-    this.saveProducts();
-
-    return true;
   }
 }
