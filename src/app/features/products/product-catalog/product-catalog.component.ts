@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '../../../core/model/product.model';
 import { ProductService } from '../../../core/services/product.service';
@@ -167,5 +167,10 @@ export class ProductCatalogComponent implements OnInit {
 
   onAddToCart(product: Product): void {
     alert(`Đã thêm "${product.title}" vào giỏ hàng!`);
+  }
+  @Input() set category(val: string | undefined) {
+    this.selectedCategory = val || 'all';
+    this.currentPage = 1;
+    this.loadProducts();
   }
 }

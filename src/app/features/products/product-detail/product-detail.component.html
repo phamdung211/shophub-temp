@@ -9,7 +9,11 @@
     </a>
     @if (product) {
     <span>/</span>
-    <span class="capitalize text-gray-600">{{ product.category }}</span>
+    <!-- <span class="capitalize text-gray-600">{{ product.category }}</span> -->
+    <a routerLink="/products" [queryParams]="{ category: product.category }"
+      class="capitalize text-gray-600 hover:text-blue-600 transition hover:underline">
+      {{ product.category }}
+    </a>
     <span>/</span>
     <span class="font-medium text-gray-900 truncate max-w-xs">{{ product.title }}</span>
     }

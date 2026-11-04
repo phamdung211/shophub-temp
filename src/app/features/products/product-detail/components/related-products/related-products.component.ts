@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Product } from '../../../../../core/model/product.model';
@@ -67,7 +67,7 @@ import { ImageFallbackDirective } from '../../../../../shared/directives/image-f
     </div>
   `,
 })
-export class RelatedProductsComponent implements OnInit {
+export class RelatedProductsComponent implements OnInit, OnChanges {
   private productService = inject(ProductService);
 
   @Input() category?: string;
@@ -76,6 +76,16 @@ export class RelatedProductsComponent implements OnInit {
   relatedProducts: Product[] = [];
 
   ngOnInit(): void {
+    this.loadRelatedProducts();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['currentProductId'] && !changes['currentProductId'].firstChange) {
+      this.loadRelatedProducts();
+    }
+  }
+
+  loadRelatedProducts(): void {
     const request$ = this.category
       ? this.productService.getProductsByCategory(this.category, 1, 6)
       : this.productService.getProducts(1, 6);

@@ -2,6 +2,7 @@ import {
   Component,
   DestroyRef,
   EventEmitter,
+  Input,
   OnInit,
   Output,
   inject,
@@ -26,11 +27,13 @@ export class ProductFilterBarComponent implements OnInit {
   searchControl = new FormControl('', { nonNullable: true });
 
   // Danh mục được chọn
-  selectedCategory = 'all';
+  // selectedCategory = 'all';
 
   // Sự kiện gửi lên Smart Component (ProductCatalogComponent)
   @Output() searchChange = new EventEmitter<string>();
   @Output() categoryChange = new EventEmitter<string>();
+
+  @Input() selectedCategory = 'all';
 
   categories: { label: string; value: string }[] = [
     { label: 'Tất cả danh mục', value: 'all' },

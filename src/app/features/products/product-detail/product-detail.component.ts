@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { Product } from '../../../core/model/product.model';
@@ -24,7 +24,7 @@ import { RelatedProductsComponent } from './components/related-products/related-
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss',
 })
-export class ProductDetailComponent implements OnInit {
+export class ProductDetailComponent implements OnInit, OnChanges {
   private productService = inject(ProductService);
   private location = inject(Location);
   private router = inject(Router);
@@ -38,6 +38,14 @@ export class ProductDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProduct();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['id'] && !changes['id'].firstChange) {
+      this.quantity = 1;
+      this.loadProduct();
+      // window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   loadProduct(): void {
