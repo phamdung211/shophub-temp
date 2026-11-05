@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { ProductCardComponent } from './features/products/components/product-card/product-card.component';
 import type { Product } from './core/model/product.model';
 import { ProductCatalogComponent } from './features/products/product-catalog/product-catalog.component';
+import { LoadingService } from './core/services/loading.service';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -19,6 +20,7 @@ import { ProductCatalogComponent } from './features/products/product-catalog/pro
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
+  loadingService = inject(LoadingService);
   // products: Product[] = [
   //   {
   //     id: 1,

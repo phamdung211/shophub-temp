@@ -1,3 +1,9 @@
+@if (loadingService.isLoading()) {
+<div class="fixed top-0 left-0 right-0 z-[9999] h-1.5 bg-indigo-100/60 overflow-hidden">
+    <div class="h-full w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-pink-500 animate-pulse shadow-sm"></div>
+</div>
+}
+
 <app-header />
 
 <router-outlet />
