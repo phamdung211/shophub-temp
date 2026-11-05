@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { Product } from '../../../core/model/product.model';
@@ -24,7 +24,7 @@ import { RelatedProductsComponent } from './components/related-products/related-
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss',
 })
-export class ProductDetailComponent implements OnInit {
+export class ProductDetailComponent implements OnInit, OnChanges {
   private productService = inject(ProductService);
   private location = inject(Location);
   private router = inject(Router);
@@ -34,19 +34,37 @@ export class ProductDetailComponent implements OnInit {
   product?: Product;
   selectedImage: string = '';
   quantity: number = 1;
+  isLoading = false;
 
   ngOnInit(): void {
     this.loadProduct();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['id'] && !changes['id'].firstChange) {
+      this.quantity = 1;
+      this.loadProduct();
+      // window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
   loadProduct(): void {
     const numericId = Number(this.id);
     if (!Number.isNaN(numericId)) {
-      this.product = this.productService.getProductById(numericId);
-      if (this.product) {
-        this.selectedImage =
-          this.product.images?.[0] || this.product.thumbnail || '';
-      }
+      this.isLoading = true;
+      this.productService.getProductById(numericId).subscribe({
+        next: (data) => {
+          this.product = data;
+          this.selectedImage =
+            data.images?.[0] || data.thumbnail || '';
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Lỗi khi tải chi tiết sản phẩm:', err);
+          this.product = undefined;
+          this.isLoading = false;
+        },
+      });
     }
   }
 

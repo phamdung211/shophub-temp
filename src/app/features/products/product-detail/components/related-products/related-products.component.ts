@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Product } from '../../../../../core/model/product.model';
@@ -67,7 +67,7 @@ import { ImageFallbackDirective } from '../../../../../shared/directives/image-f
     </div>
   `,
 })
-export class RelatedProductsComponent implements OnInit {
+export class RelatedProductsComponent implements OnInit, OnChanges {
   private productService = inject(ProductService);
 
   @Input() category?: string;
@@ -76,18 +76,29 @@ export class RelatedProductsComponent implements OnInit {
   relatedProducts: Product[] = [];
 
   ngOnInit(): void {
-    const all = this.productService.getProducts();
-    this.relatedProducts = all
-      .filter((p) => p.id !== this.currentProductId && (!this.category || p.category === this.category))
-      .slice(0, 4);
+    this.loadRelatedProducts();
+  }
 
-    // Nếu không đủ sản phẩm cùng loại, lấy thêm các sản phẩm khác
-    if (this.relatedProducts.length < 4) {
-      const remaining = all
-        .filter((p) => p.id !== this.currentProductId && !this.relatedProducts.some((r) => r.id === p.id))
-        .slice(0, 4 - this.relatedProducts.length);
-      this.relatedProducts = [...this.relatedProducts, ...remaining];
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['currentProductId'] && !changes['currentProductId'].firstChange) {
+      this.loadRelatedProducts();
     }
   }
-}
 
+  loadRelatedProducts(): void {
+    const request$ = this.category
+      ? this.productService.getProductsByCategory(this.category, 1, 6)
+      : this.productService.getProducts(1, 6);
+
+    request$.subscribe({
+      next: (res) => {
+        this.relatedProducts = res.products
+          .filter((p) => p.id !== this.currentProductId)
+          .slice(0, 4);
+      },
+      error: (err) => {
+        console.warn('Không thể tải sản phẩm liên quan:', err);
+      },
+    });
+  }
+}
