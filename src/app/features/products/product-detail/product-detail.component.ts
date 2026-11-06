@@ -3,6 +3,7 @@ import { CommonModule, Location } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { Product } from '../../../core/model/product.model';
 import { ProductService } from '../../../core/services/product.service';
+import { CartService } from '../../../core/services/cart.service';
 import { VndCurrencyPipe } from '../../../shared/pipes/vnd-currency.pipe';
 import { DiscountCalculatorPipe } from '../../../shared/pipes/discount-calculator.pipe';
 import { ImageFallbackDirective } from '../../../shared/directives/image-fallback.directive';
@@ -26,6 +27,7 @@ import { RelatedProductsComponent } from './components/related-products/related-
 })
 export class ProductDetailComponent implements OnInit, OnChanges {
   private productService = inject(ProductService);
+  private cartService = inject(CartService);
   private location = inject(Location);
   private router = inject(Router);
 
@@ -90,7 +92,7 @@ export class ProductDetailComponent implements OnInit, OnChanges {
 
   addToCart(): void {
     if (this.product) {
-      alert(`Đã thêm ${this.quantity} sản phẩm "${this.product.title}" vào giỏ hàng!`);
+      this.cartService.addToCart(this.product, this.quantity);
     }
   }
 }

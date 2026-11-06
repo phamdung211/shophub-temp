@@ -9,13 +9,6 @@
       <a routerLink="/products" routerLinkActive="text-blue-600 font-semibold" class="transition hover:text-blue-600">
         Sản phẩm
       </a>
-      <!-- <a
-        routerLink="/admin/products/create"
-        routerLinkActive="text-blue-600 font-semibold"
-        class="transition hover:text-blue-600"
-      >
-        Thêm sản phẩm
-      </a> -->
     </nav>
 
     <div class="flex items-center gap-3">
@@ -37,11 +30,19 @@
         + Thêm mới
       </a>
 
-      <button type="button"
-        class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 flex items-center gap-2 shadow-sm">
+      <!-- Badge giỏ hàng phản ứng tức thì qua Signals -->
+      <a routerLink="/cart"
+        routerLinkActive="bg-blue-700 ring-2 ring-blue-300"
+        class="relative rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 flex items-center gap-2 shadow-sm">
         <span>🛒</span>
         <span>Giỏ hàng</span>
-      </button>
+        @if (cartService.totalItemsCount() > 0) {
+        <span
+          class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold bg-amber-400 text-gray-900 rounded-full shadow-sm animate-pulse">
+          {{ cartService.totalItemsCount() }}
+        </span>
+        }
+      </a>
     </div>
   </div>
 </header>

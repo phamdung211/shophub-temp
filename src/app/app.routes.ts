@@ -23,6 +23,11 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'cart',
+    loadComponent: () =>
+      import('./features/cart/cart.component').then((m) => m.CartComponent),
+  },
+  {
     path: 'admin/products/create',
     canActivate: [authGuard],
     canDeactivate: [unsavedChangesGuard],

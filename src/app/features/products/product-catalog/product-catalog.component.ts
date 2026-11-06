@@ -2,6 +2,7 @@ import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '../../../core/model/product.model';
 import { ProductService } from '../../../core/services/product.service';
+import { CartService } from '../../../core/services/cart.service';
 import { ProductCardComponent } from '../components/product-card/product-card.component';
 import { ProductFilterBarComponent } from '../product-filter-bar/product-filter-bar.component';
 
@@ -14,6 +15,7 @@ import { ProductFilterBarComponent } from '../product-filter-bar/product-filter-
 })
 export class ProductCatalogComponent implements OnInit {
   private productService = inject(ProductService);
+  private cartService = inject(CartService);
 
   products: Product[] = [];
   isLoading = false;
@@ -166,7 +168,7 @@ export class ProductCatalogComponent implements OnInit {
   }
 
   onAddToCart(product: Product): void {
-    alert(`Đã thêm "${product.title}" vào giỏ hàng!`);
+    this.cartService.addToCart(product, 1);
   }
   @Input() set category(val: string | undefined) {
     this.selectedCategory = val || 'all';

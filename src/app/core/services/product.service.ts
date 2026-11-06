@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { Product, ProductCategory } from '../model/product.model';
 import { PaginatedResponse } from '../model/api-response.model';
 
@@ -10,7 +10,26 @@ import { PaginatedResponse } from '../model/api-response.model';
 export class ProductService {
   private http = inject(HttpClient);
   private readonly apiUrl = 'https://dummyjson.com/products';
+  // Thêm hằng số key lưu trữ
+  private readonly LOCAL_PRODUCTS_KEY = 'shophub_local_products';
 
+  /**
+   * Đọc danh sách sản phẩm do người dùng tự tạo từ localStorage
+   */
+  private getLocalProducts(): Product[] {
+    const data = localStorage.getItem(this.LOCAL_PRODUCTS_KEY);
+    return data ? JSON.parse(data) : [];
+  }
+
+  /**
+   * Lưu sản phẩm mới tạo vào đầu danh sách trong localStorage
+   */
+  private saveLocalProduct(product: Product): void {
+    const current = this.getLocalProducts();
+    // Đưa sản phẩm mới lên đầu mảng
+    const updated = [product, ...current];
+    localStorage.setItem(this.LOCAL_PRODUCTS_KEY, JSON.stringify(updated));
+  }
   /**
    * Lấy danh sách sản phẩm có phân trang từ DummyJSON API
    * @param page Số trang hiện tại (bắt đầu từ 1)
@@ -22,7 +41,20 @@ export class ProductService {
       .set('limit', limit.toString())
       .set('skip', skip.toString());
 
-    return this.http.get<PaginatedResponse<Product>>(this.apiUrl, { params });
+    return this.http.get<PaginatedResponse<Product>>(this.apiUrl, { params }).pipe(
+      map((res) => {
+        // Khi ở trang 1, chèn sản phẩm mới tạo lên đầu danh sách
+        if (page === 1) {
+          const local = this.getLocalProducts();
+          return {
+            ...res,
+            products: [...local, ...res.products],
+            total: res.total + local.length,
+          };
+        }
+        return res;
+      })
+    );
   }
 
   /**
@@ -94,7 +126,11 @@ export class ProductService {
    * @param product Dữ liệu sản phẩm mới
    */
   addProduct(product: Partial<Product>): Observable<Product> {
-    return this.http.post<Product>(`${this.apiUrl}/add`, product);
+    return this.http.post<Product>(`${this.apiUrl}/add`, product).pipe(
+      tap((createdProduct) => {
+        this.saveLocalProduct(createdProduct);
+      })
+    );
   }
 
   /**
