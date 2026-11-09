@@ -82,7 +82,23 @@ export class ProductService {
       .set('limit', limit.toString())
       .set('skip', skip.toString());
 
-    return this.http.get<PaginatedResponse<Product>>(`${this.apiUrl}/search`, { params });
+    return this.http.get<PaginatedResponse<Product>>(`${this.apiUrl}/search`, { params }).pipe(
+      map((res) => {
+        const localList = this.getLocalProducts();
+        const searchKey = keyword.trim().toLowerCase();
+
+        const matchedProducts = localList.filter((p) => p.title.toLowerCase().includes(searchKey));
+        if (page === 1) {
+          return {
+            ...res, // Giữ nguyên các thuộc tính khác của server (skip, limit...)
+            products: [...matchedProducts, ...res.products], // Đưa hàng local lên trước
+            total: res.total + matchedProducts.length, // Cộng thêm số lượng vào tổng
+          };
+        }
+        return res;
+      })
+
+    )
   }
 
   /**
@@ -104,7 +120,21 @@ export class ProductService {
     return this.http.get<PaginatedResponse<Product>>(
       `${this.apiUrl}/category/${encodeURIComponent(category)}`,
       { params },
-    );
+    ).pipe(map((res) => {
+      const localList = this.getLocalProducts();
+
+      const categories = category.trim().toLowerCase();
+
+      const matchedProducts = localList.filter((p) => p.category.toLowerCase().includes(categories));
+      if (page === 1) {
+        return {
+          ...res,
+          products: [...matchedProducts, ...res.products],
+          total: res.total + matchedProducts.length,
+        };
+      }
+      return res;
+    }))
   }
 
   /**
