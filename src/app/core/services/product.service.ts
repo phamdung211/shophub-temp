@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map, Observable, tap } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 import { Product, ProductCategory } from '../model/product.model';
 import { PaginatedResponse } from '../model/api-response.model';
 
@@ -62,6 +62,13 @@ export class ProductService {
    * @param id ID của sản phẩm
    */
   getProductById(id: number | string): Observable<Product> {
+    const localList = this.getLocalProducts();
+    const localProduct = localList.find((p) => String(p.id) === String(id));
+
+    if (localProduct) {
+      return of(localProduct);
+    }
+
     return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
 
