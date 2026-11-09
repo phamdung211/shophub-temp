@@ -180,8 +180,18 @@ export class ProductService {
    */
   addProduct(product: Partial<Product>): Observable<Product> {
     return this.http.post<Product>(`${this.apiUrl}/add`, product).pipe(
-      tap((createdProduct) => {
-        this.saveLocalProduct(createdProduct);
+      // Đổi 'tap' thành 'map' để biến đổi dữ liệu trả về cho component
+      map((createdProduct) => {
+        const productWithUniqueId: Product = {
+          ...(createdProduct as Product),
+          id: Date.now(), // Sinh mã số duy nhất theo thời gian
+        };
+
+        // 1. Lưu vào localStorage
+        this.saveLocalProduct(productWithUniqueId);
+
+        // 2. Return để component nhận được ID mới này
+        return productWithUniqueId;
       })
     );
   }

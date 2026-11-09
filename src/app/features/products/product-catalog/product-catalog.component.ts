@@ -5,6 +5,7 @@ import { ProductService } from '../../../core/services/product.service';
 import { CartService } from '../../../core/services/cart.service';
 import { ProductCardComponent } from '../components/product-card/product-card.component';
 import { ProductFilterBarComponent } from '../product-filter-bar/product-filter-bar.component';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-product-catalog',
@@ -16,7 +17,7 @@ import { ProductFilterBarComponent } from '../product-filter-bar/product-filter-
 export class ProductCatalogComponent implements OnInit {
   private productService = inject(ProductService);
   private cartService = inject(CartService);
-
+  private toastService = inject(ToastService);
   products: Product[] = [];
   isLoading = false;
   errorMessage = '';
@@ -171,17 +172,18 @@ export class ProductCatalogComponent implements OnInit {
           this.cartService.removeFromCart(product.id);
         }
 
-        alert(`Đã xóa sản phẩm "${product.title}" thành công!`);
+        this.toastService.success(`Đã xóa sản phẩm "${product.title}" thành công!`);
       },
       error: (err) => {
         console.error('Lỗi khi xóa sản phẩm:', err);
-        alert('Có lỗi xảy ra khi xóa sản phẩm!');
+        this.toastService.error('Có lỗi xảy ra khi xóa sản phẩm!');
       },
     });
   }
 
   onAddToCart(product: Product): void {
     this.cartService.addToCart(product, 1);
+    this.toastService.success(`Đã thêm "${product.title}" vào giỏ hàng! 🛒`);
   }
   @Input() set category(val: string | undefined) {
     this.selectedCategory = val || 'all';

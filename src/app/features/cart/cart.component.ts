@@ -6,6 +6,7 @@ import { CartItem } from '../../core/model/cart.model';
 import { VndCurrencyPipe } from '../../shared/pipes/vnd-currency.pipe';
 import { DiscountCalculatorPipe } from '../../shared/pipes/discount-calculator.pipe';
 import { ImageFallbackDirective } from '../../shared/directives/image-fallback.directive';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-cart',
@@ -23,7 +24,7 @@ import { ImageFallbackDirective } from '../../shared/directives/image-fallback.d
 export class CartComponent {
   cartService = inject(CartService);
   private router = inject(Router);
-
+  private toastService = inject(ToastService);
   // Expose signals trực tiếp từ CartService
   readonly cartItems = this.cartService.cartItems;
   readonly totalItemsCount = this.cartService.totalItemsCount;
@@ -34,7 +35,7 @@ export class CartComponent {
 
   increaseQuantity(item: CartItem): void {
     if (item.product.stock != null && item.quantity >= item.product.stock) {
-      alert(`Số lượng trong kho chỉ còn ${item.product.stock} sản phẩm!`);
+      this.toastService.warning(`Số lượng trong kho chỉ còn ${item.product.stock} sản phẩm!`);
       return;
     }
     this.cartService.updateQuantity(item.product.id, item.quantity + 1);
@@ -58,7 +59,7 @@ export class CartComponent {
     }
 
     if (item.product.stock != null && value > item.product.stock) {
-      alert(`Số lượng trong kho chỉ còn ${item.product.stock} sản phẩm!`);
+      this.toastService.warning(`Số lượng trong kho chỉ còn ${item.product.stock} sản phẩm!`);
       input.value = item.product.stock.toString();
       this.cartService.updateQuantity(item.product.id, item.product.stock);
       return;
@@ -85,7 +86,8 @@ export class CartComponent {
 
   proceedToCheckout(): void {
     if (this.isEmpty()) {
-      alert('Giỏ hàng của bạn đang trống!');
+      // Thay vì: alert('Giỏ hàng của bạn đang trống!');
+      this.toastService.info('Giỏ hàng của bạn đang trống! Hãy chọn sản phẩm trước nhé.');
       return;
     }
     this.router.navigate(['/checkout']);

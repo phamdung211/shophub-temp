@@ -13,6 +13,7 @@ import {
   priceDiscountValidator,
 } from './product-form.validators';
 import { AuthService } from '../../../core/services/auth.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-product-form',
@@ -26,7 +27,7 @@ export class ProductFormComponent implements OnInit, HasUnsavedChanges {
   private productService = inject(ProductService);
   private router = inject(Router);
   private authService = inject(AuthService);
-
+  private toastService = inject(ToastService);
   isSubmitted = false;
   isSubmitting = false;
 
@@ -87,7 +88,7 @@ export class ProductFormComponent implements OnInit, HasUnsavedChanges {
 
   onSubmit(): void {
     if (!this.authService.isLoggedIn()) {
-      alert('Phiên làm việc đã hết hạn. Bạn cần đăng nhập Admin để lưu sản phẩm!');
+      this.toastService.warning('Phiên làm việc đã hết hạn. Bạn cần đăng nhập Admin để lưu!');
       this.router.navigate(['/products']);
       return;
     }
@@ -114,16 +115,14 @@ export class ProductFormComponent implements OnInit, HasUnsavedChanges {
     this.isSubmitting = true;
     this.productService.addProduct(newProduct).subscribe({
       next: (created) => {
-        alert(
-          `Thêm sản phẩm "${created.title}" thành công qua API DummyJSON! (Mã trả về: #${created.id})`,
-        );
+        this.toastService.success(`Thêm sản phẩm "${created.title}" thành công! (Mã: #${created.id})`);
         this.isSubmitted = true;
         this.isSubmitting = false;
         void this.router.navigate(['/products']);
       },
       error: (err) => {
         console.error('Lỗi khi thêm sản phẩm:', err);
-        alert('Có lỗi xảy ra khi gọi DummyJSON API!');
+        this.toastService.error('Có lỗi xảy ra khi gọi DummyJSON API!');
         this.isSubmitting = false;
       },
     });
