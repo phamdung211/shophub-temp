@@ -30,6 +30,22 @@ export class ProductService {
     const updated = [product, ...current];
     localStorage.setItem(this.LOCAL_PRODUCTS_KEY, JSON.stringify(updated));
   }
+
+  /**
+   * Xóa sản phẩm tự tạo khỏi localStorage
+   */
+  private removeLocalProduct(id: number | string): boolean {
+    const current = this.getLocalProducts();
+    // Lọc bỏ sản phẩm cần xóa (so sánh String để an toàn cả ID dạng số và chuỗi)
+    const updated = current.filter((p) => String(p.id) !== String(id));
+
+    if (updated.length !== current.length) {
+      localStorage.setItem(this.LOCAL_PRODUCTS_KEY, JSON.stringify(updated));
+      return true; // Đã tìm thấy và xóa thành công trong local
+    }
+    return false; // Không nằm trong local (là sản phẩm gốc của DummyJSON)
+  }
+
   /**
    * Lấy danh sách sản phẩm có phân trang từ DummyJSON API
    * @param page Số trang hiện tại (bắt đầu từ 1)
@@ -175,8 +191,17 @@ export class ProductService {
    * @param id ID của sản phẩm cần xóa
    */
   deleteProduct(id: number | string): Observable<Product & { isDeleted?: boolean; deletedOn?: string }> {
+    // 1. Kiểm tra và xóa trong localStorage trước
+    const isLocal = this.removeLocalProduct(id);
+
+    // 2. Nếu là hàng local: Trả về thành công luôn, không gọi API DummyJSON
+    if (isLocal) {
+      return of({ id, isDeleted: true } as any);
+    }
+
+    // 3. Nếu là hàng của server: Gửi API xóa bình thường
     return this.http.delete<Product & { isDeleted?: boolean; deletedOn?: string }>(
-      `${this.apiUrl}/${id}`,
+      `${this.apiUrl}/${id}`
     );
   }
 }

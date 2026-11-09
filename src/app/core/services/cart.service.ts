@@ -113,10 +113,9 @@ export class CartService {
    * Xóa sản phẩm khỏi giỏ hàng theo ID
    * @param productId Mã sản phẩm
    */
-  removeFromCart(productId: number): void {
+  removeFromCart(productId: number | string): void {
     this.cartItems.update((items) =>
-      items.filter((item) => item.product.id !== productId)
-    );
+      items.filter((item) => String(item.product.id) !== String(productId)));
   }
 
   /**
@@ -129,8 +128,8 @@ export class CartService {
   /**
    * Lấy số lượng hiện có của một sản phẩm trong giỏ
    */
-  getItemQuantity(productId: number): number {
-    const item = this.cartItems().find((i) => i.product.id === productId);
+  getItemQuantity(productId: number | string): number {
+    const item = this.cartItems().find((i) => String(i.product.id) === String(productId));
     return item ? item.quantity : 0;
   }
 

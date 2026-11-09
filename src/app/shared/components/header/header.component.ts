@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { CartService } from '../../../core/services/cart.service';
+import { CurrencyService } from '../../../core/services/currency.service';
 
 @Component({
   selector: 'app-header',
@@ -14,7 +15,7 @@ export class HeaderComponent {
   authService = inject(AuthService);
   cartService = inject(CartService);
   private router = inject(Router);
-
+  currencyService = inject(CurrencyService);
   toggleLogin(): void {
     if (this.authService.isLoggedIn()) {
       this.authService.logout();
@@ -25,7 +26,7 @@ export class HeaderComponent {
         this.router.navigate(['/products']);
       }
     } else {
-      this.authService.login();
+      this.router.navigate(['/login']);
     }
   }
 }

@@ -148,16 +148,29 @@ export class ProductCatalogComponent implements OnInit {
   }
 
   deleteProduct(product: Product): void {
-    const confirmed = confirm(`Bạn có chắc muốn xóa "${product.title}" không?`);
-    if (!confirmed) {
+    // Kiểm tra xem món này có đang nằm trong giỏ hàng không
+    const isInCart = this.cartService.getItemQuantity(product.id) > 0;
+
+    // Nội dung cảnh báo thông minh
+    const confirmMessage = isInCart
+      ? `⚠️ Sản phẩm "${product.title}" ĐANG CÓ TRONG GIỎ HÀNG!\n\nNếu bạn xóa, sản phẩm này cũng sẽ bị gỡ khỏi giỏ hàng. Bạn có chắc chắn muốn xóa không?`
+      : `Bạn có chắc muốn xóa "${product.title}" không?`;
+
+    if (!confirm(confirmMessage)) {
       return;
     }
 
     this.productService.deleteProduct(product.id).subscribe({
       next: () => {
-        // DummyJSON chỉ giả lập xóa, ta xóa trực tiếp trên danh sách hiện tại
-        this.products = this.products.filter((p) => p.id !== product.id);
+        // Xóa trên danh sách hiển thị
+        this.products = this.products.filter((p) => String(p.id) !== String(product.id));
         this.totalProducts = Math.max(0, this.totalProducts - 1);
+
+        // Đồng thời gỡ khỏi giỏ hàng nếu đang có trong giỏ
+        if (isInCart) {
+          this.cartService.removeFromCart(product.id);
+        }
+
         alert(`Đã xóa sản phẩm "${product.title}" thành công!`);
       },
       error: (err) => {

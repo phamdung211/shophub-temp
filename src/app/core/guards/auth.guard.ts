@@ -11,5 +11,5 @@ export const authGuard: CanActivateFn = () => {
     }
 
     alert('⚠️ Bạn cần đăng nhập với quyền Admin để truy cập trang này!');
-    return router.createUrlTree(['/products']);
+    return router.createUrlTree(['/login']);
 };

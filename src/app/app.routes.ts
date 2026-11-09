@@ -41,6 +41,13 @@ export const routes: Routes = [
     redirectTo: 'admin/products/create',
   },
   {
+    path: 'login',
+    loadComponent: () =>
+      import('./features/auth/login/login.component').then(
+        (m) => m.LoginComponent
+      ),
+  },
+  {
     path: '**',
     loadComponent: () =>
       import('./features/not-found/not-found.component').then(
