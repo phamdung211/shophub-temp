@@ -43,7 +43,7 @@
         [class]="currencyService.currentCurrency() === 'VND' 
     ? 'bg-amber-50 text-amber-700 border-amber-200' 
     : 'bg-emerald-50 text-emerald-700 border-emerald-200'" title="Nhấn để đổi giữa VND và USD">
-        <span>💱</span>
+        <span class="text-xl leading-none">💱</span>
         <span>{{ currencyService.currentCurrency() }}</span>
       </button>
 
