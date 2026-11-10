@@ -2,6 +2,7 @@ import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { CartItem } from '../model/cart.model';
 import { Product } from '../model/product.model';
 import { StorageService } from './storage.service';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +10,7 @@ import { StorageService } from './storage.service';
 export class CartService {
   private readonly storageService = inject(StorageService);
   private readonly STORAGE_KEY = 'shophub_cart_items';
-
+  private readonly toastService = inject(ToastService);
   // State: Cart items quản lý toàn diện qua Angular Signal
   readonly cartItems = signal<CartItem[]>(this.loadInitialCart());
 
@@ -59,30 +60,39 @@ export class CartService {
    * @param product Thông tin sản phẩm
    * @param quantity Số lượng muốn thêm (mặc định 1)
    */
-  addToCart(product: Product, quantity: number = 1): void {
-    if (!product || quantity <= 0) return;
+  addToCart(product: Product, quantity: number = 1): boolean {
+    if (!product || quantity <= 0) return false;
 
+    //kiểm tra nếu sản phẩm đã hết hàng trong kho
+    if (product.stock == null || product.stock <= 0) {
+      this.toastService.error(`Sản phẩm "${product.title}" hiện đã hết hàng!`);
+      return false;
+    }
+
+    //Kiểm tra nếu số lượng trong giỏ + số lượng muốn thêm vượt quá tồn kho
+    const currentQty = this.getItemQuantity(product.id);
+    if (currentQty + quantity > product.stock) {
+      this.toastService.warning(
+        `Kho chỉ còn ${product.stock} sản phẩm. Bạn đã có ${currentQty} món trong giỏ!`
+      );
+      return false;
+    }
+
+    //đủ điều kiện -> Cập nhật giỏ hàng
     this.cartItems.update((items) => {
       const index = items.findIndex((i) => i.product.id === product.id);
 
       if (index > -1) {
-        // Đã có trong giỏ -> tăng số lượng (tối đa không vượt tồn kho nếu có)
-        return items.map((item, i) => {
-          if (i === index) {
-            const nextQty = item.quantity + quantity;
-            const finalQty =
-              product.stock != null ? Math.min(nextQty, product.stock) : nextQty;
-            return { ...item, quantity: finalQty };
-          }
-          return item;
-        });
+        return items.map((item, i) =>
+          i === index ? { ...item, quantity: item.quantity + quantity } : item
+        );
       }
 
-      // Chưa có trong giỏ -> thêm phần tử mới
-      const finalQty =
-        product.stock != null ? Math.min(quantity, product.stock) : quantity;
-      return [...items, { product, quantity: finalQty }];
+      return [...items, { product, quantity }];
     });
+
+    this.toastService.success(`Đã thêm "${product.title}" vào giỏ hàng!`);
+    return true;
   }
 
   /**
@@ -139,6 +149,19 @@ export class CartService {
   private loadInitialCart(): CartItem[] {
     const data = this.storageService.getItem<CartItem[]>(this.STORAGE_KEY, []);
     return Array.isArray(data) ? data : [];
+  }
+  /**
+ * Kiểm tra xem sản phẩm có đủ tồn kho để thêm vào giỏ hay không
+ * @param product Sản phẩm cần kiểm tra
+ * @param quantityToAdd Số lượng muốn mua thêm (mặc định là 1)
+ */
+  canAddToCart(product: Product, quantityToAdd: number = 1): boolean {
+    if (!product || product.stock == null || product.stock <= 0) {
+      return false; // Hết hàng hoàn toàn
+    }
+
+    const currentQtyInCart = this.getItemQuantity(product.id);
+    return (currentQtyInCart + quantityToAdd) <= product.stock;
   }
 }
 

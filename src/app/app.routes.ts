@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { unsavedChangesGuard } from './core/guards/unsaved-changes.guard';
+import { checkoutGuard } from './core/guards/checkout.guard';
 
 export const routes: Routes = [
   {
@@ -45,6 +46,22 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/auth/login/login.component').then(
         (m) => m.LoginComponent
+      ),
+  },
+
+  {
+    path: 'checkout',
+    canActivate: [authGuard, checkoutGuard], // Bảo vệ: Phải đăng nhập VÀ Giỏ hàng có đồ
+    loadComponent: () =>
+      import('./features/checkout/checkout.component').then(
+        (m) => m.CheckoutComponent
+      ),
+  },
+  {
+    path: 'order-success/:orderId',
+    loadComponent: () =>
+      import('./features/checkout/order-success/order-success.component').then(
+        (m) => m.OrderSuccessComponent
       ),
   },
   {

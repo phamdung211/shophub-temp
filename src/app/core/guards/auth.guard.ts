@@ -11,6 +11,6 @@ export const authGuard: CanActivateFn = () => {
         return true;
     }
 
-    toastService.warning('Bạn cần đăng nhập với quyền Admin để truy cập trang này!');
+    toastService.warning('Bạn cần đăng nhập để tiếp tục!');
     return router.createUrlTree(['/login']);
 };

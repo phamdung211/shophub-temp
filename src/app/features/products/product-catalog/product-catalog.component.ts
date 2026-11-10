@@ -183,7 +183,7 @@ export class ProductCatalogComponent implements OnInit {
 
   onAddToCart(product: Product): void {
     this.cartService.addToCart(product, 1);
-    this.toastService.success(`Đã thêm "${product.title}" vào giỏ hàng! 🛒`);
+    // this.toastService.success(`Đã thêm "${product.title}" vào giỏ hàng! 🛒`);
   }
   @Input() set category(val: string | undefined) {
     this.selectedCategory = val || 'all';
