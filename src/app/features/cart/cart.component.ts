@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { CartService } from '../../core/services/cart.service';
@@ -32,6 +32,19 @@ export class CartComponent {
   readonly totalOriginalPrice = this.cartService.totalOriginalPrice;
   readonly totalSavings = this.cartService.totalSavings;
   readonly isEmpty = this.cartService.isEmpty;
+
+  // Signal quản lý Modal xác nhận
+  confirmModal = signal<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+  }>({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: () => { },
+  });
 
   increaseQuantity(item: CartItem): void {
     if (item.product.stock != null && item.quantity >= item.product.stock) {
@@ -69,19 +82,33 @@ export class CartComponent {
   }
 
   removeItem(productId: number, productTitle: string): void {
-    const confirmed = confirm(
-      `Bạn có chắc chắn muốn xóa "${productTitle}" khỏi giỏ hàng?`
-    );
-    if (confirmed) {
-      this.cartService.removeFromCart(productId);
-    }
+    this.confirmModal.set({
+      isOpen: true,
+      title: 'Xóa sản phẩm',
+      message: `Bạn có chắc chắn muốn xóa "${productTitle}" khỏi giỏ hàng không?`,
+      onConfirm: () => {
+        this.cartService.removeFromCart(productId);
+        this.toastService.info(`Đã xóa "${productTitle}" khỏi giỏ hàng!`);
+        this.closeModal();
+      },
+    });
   }
 
   clearCart(): void {
-    const confirmed = confirm('Bạn có chắc chắn muốn xóa toàn bộ giỏ hàng?');
-    if (confirmed) {
-      this.cartService.clearCart();
-    }
+    this.confirmModal.set({
+      isOpen: true,
+      title: 'Xóa toàn bộ giỏ hàng',
+      message: 'Bạn có chắc chắn muốn xóa tất cả sản phẩm khỏi giỏ hàng không? Hành động này không thể hoàn tác.',
+      onConfirm: () => {
+        this.cartService.clearCart();
+        this.toastService.info('Đã xóa toàn bộ giỏ hàng!');
+        this.closeModal();
+      },
+    });
+  }
+
+  closeModal(): void {
+    this.confirmModal.update((m) => ({ ...m, isOpen: false }));
   }
 
   proceedToCheckout(): void {

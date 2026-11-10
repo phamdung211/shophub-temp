@@ -54,7 +54,8 @@
     <div class="lg:col-span-2 space-y-4">
       <div class="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden divide-y divide-gray-100">
         @for (item of cartItems(); track item.product.id) {
-        <div class="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 hover:bg-gray-50/50 transition">
+        <div
+          class="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 hover:bg-gray-50/50 transition">
           <!-- Ảnh sản phẩm -->
           <a [routerLink]="['/products', item.product.id]" class="flex-shrink-0 group">
             <img [src]="item.product.thumbnail" [appImageFallback]="'assets/images/product-placeholder.svg'"
@@ -65,14 +66,14 @@
           <!-- Thông tin sản phẩm -->
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2">
-              <span class="inline-block rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 capitalize">
+              <span
+                class="inline-block rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 capitalize">
                 {{ item.product.category }}
               </span>
-              @if (item.product.stock <= 5) {
-              <span class="text-xs text-amber-600 font-medium">
+              @if (item.product.stock <= 5) { <span class="text-xs text-amber-600 font-medium">
                 ⚠️ Chỉ còn {{ item.product.stock }} sản phẩm
-              </span>
-              }
+                </span>
+                }
             </div>
 
             <h3 class="mt-1 font-semibold text-gray-900 truncate">
@@ -123,7 +124,8 @@
             <p class="text-xs text-gray-400">Thành tiền</p>
             <p class="font-bold text-blue-600 text-base mt-0.5">
               @if (item.product.discountPercentage > 0) {
-              {{ (item.product.price | discountCalculator: item.product.discountPercentage) * item.quantity | vndCurrency }}
+              {{ (item.product.price | discountCalculator: item.product.discountPercentage) * item.quantity |
+              vndCurrency }}
               } @else {
               {{ item.product.price * item.quantity | vndCurrency }}
               }
@@ -219,4 +221,34 @@
   </div>
   }
 </div>
+<!-- POPUP MODAL XÁC NHẬN XÓA (Hiện đại & mượt mà) -->
+@if (confirmModal().isOpen) {
+<!-- Lớp nền tối mờ (Backdrop) -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity">
+  <!-- Khung Card Modal -->
+  <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-gray-100 space-y-4">
+    <!-- Icon thùng rác cảnh báo -->
+    <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto text-2xl">
+      🗑️
+    </div>
 
+    <!-- Tiêu đề & Lời nhắn -->
+    <div class="text-center">
+      <h3 class="text-lg font-bold text-gray-900">{{ confirmModal().title }}</h3>
+      <p class="text-sm text-gray-500 mt-2">{{ confirmModal().message }}</p>
+    </div>
+
+    <!-- Hai nút bấm Hủy / Xác nhận -->
+    <div class="flex gap-3 pt-2">
+      <button type="button" (click)="closeModal()"
+        class="flex-1 px-4 py-2.5 rounded-xl border border-gray-300 text-gray-700 text-sm font-semibold hover:bg-gray-50 transition">
+        Hủy bỏ
+      </button>
+      <button type="button" (click)="confirmModal().onConfirm()"
+        class="flex-1 px-4 py-2.5 rounded-xl bg-red-600 text-white text-sm font-semibold hover:bg-red-700 shadow-sm transition">
+        Xác nhận xóa
+      </button>
+    </div>
+  </div>
+</div>
+}
