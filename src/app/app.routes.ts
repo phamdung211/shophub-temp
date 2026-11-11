@@ -65,6 +65,23 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'admin/products',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/admin/admin-products/admin-products.component').then(
+        (m) => m.AdminProductsComponent
+      ),
+  },
+  {
+    path: 'admin/products/edit/:id',
+    canActivate: [authGuard],
+    canDeactivate: [unsavedChangesGuard],
+    loadComponent: () =>
+      import('./features/admin/product-form/product-form.component').then(
+        (m) => m.ProductFormComponent
+      ),
+  },
+  {
     path: '**',
     loadComponent: () =>
       import('./features/not-found/not-found.component').then(

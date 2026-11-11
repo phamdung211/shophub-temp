@@ -51,9 +51,9 @@
       (click)="onBuyClick()" [disabled]="isOutOfStock()">
       {{ isOutOfStock() ? (product.stock <= 0 ? "Hết hàng" : "Đã có hết trong giỏ" ) : "Mua ngay" }} </button>
 
-        <button type="button" class="rounded-lg bg-red-600 px-4 py-2 text-white transition hover:bg-red-700"
+        <!-- <button type="button" class="rounded-lg bg-red-600 px-4 py-2 text-white transition hover:bg-red-700"
           (click)="onDeleteClick()">
           Xóa
-        </button>
+        </button> -->
   </div>
 </div>

@@ -214,4 +214,53 @@ export class ProductService {
       `${this.apiUrl}/${id}`
     );
   }
+
+  /**
+ * Cập nhật sản phẩm qua API PUT hoặc cập nhật trong localStorage nếu là hàng local
+ * @param id ID sản phẩm cần cập nhật
+ * @param product Dữ liệu mới cần thay đổi
+ */
+  updateProduct(id: number | string, product: Partial<Product>): Observable<Product> {
+    //kiểm tra và cập nhật nếu là hàng local
+    const updatedLocal = this.updateLocalProduct(id, product);
+    if (updatedLocal) {
+      return of(updatedLocal); // Trả về Observable hoàn thành ngay lập tức
+    }
+
+    //nếu là hàng của server DummyJSON: gửi HTTP PUT request
+    return this.http.put<Product>(`${this.apiUrl}/${id}`, product);
+  }
+
+  /**
+   * Cập nhật thông tin sản phẩm tự tạo trong localStorage
+   * @param id ID của sản phẩm cần sửa
+   * @param updatedFields Các trường thông tin cần cập nhật
+   * @returns Product sau khi cập nhật hoặc null nếu sản phẩm không nằm trong local
+   */
+  private updateLocalProduct(
+    id: number | string,
+    updatedFields: Partial<Product>
+  ): Product | null {
+    const current = this.getLocalProducts();
+    //tìm vị trí của sản phẩm trong mảng
+    const index = current.findIndex((p) => String(p.id) === String(id));
+
+    //không tìm thấy trong local -> trả về null để báo hiệu là hàng của server
+    if (index === -1) {
+      return null;
+    }
+
+    //gộp dữ liệu: giữ nguyên thông tin cũ, ghi đè các trường mới
+    const updatedProduct: Product = {
+      ...current[index],
+      ...updatedFields,
+      id: current[index].id, // Đảm bảo ID gốc không bị ghi đè vô tình
+    };
+
+    //cập nhật lại vào mảng và lưu bền vững vào localStorage
+    current[index] = updatedProduct;
+    localStorage.setItem(this.LOCAL_PRODUCTS_KEY, JSON.stringify(current));
+
+    return updatedProduct;
+  }
 }

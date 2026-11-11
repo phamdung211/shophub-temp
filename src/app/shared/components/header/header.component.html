@@ -9,6 +9,14 @@
       <a routerLink="/products" routerLinkActive="text-blue-600 font-semibold" class="transition hover:text-blue-600">
         Sản phẩm
       </a>
+
+      <!-- link Quản trị kho khi đã đăng nhập -->
+      @if (authService.isLoggedIn()) {
+      <a routerLink="/admin/products" routerLinkActive="text-blue-600 font-semibold"
+        class="transition hover:text-blue-600">
+        Quản trị kho
+      </a>
+      }
     </nav>
 
     <div class="flex items-center gap-3">
