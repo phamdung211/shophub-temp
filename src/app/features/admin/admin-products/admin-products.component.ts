@@ -6,6 +6,7 @@ import { ToastService } from '../../../core/services/toast.service';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { VndCurrencyPipe } from '../../../shared/pipes/vnd-currency.pipe';
 import { ImageFallbackDirective } from '../../../shared/directives/image-fallback.directive';
+import { ProductFilterBarComponent } from '../../products/product-filter-bar/product-filter-bar.component';
 
 @Component({
   selector: 'app-admin-products',
@@ -15,6 +16,7 @@ import { ImageFallbackDirective } from '../../../shared/directives/image-fallbac
     ConfirmModalComponent,
     VndCurrencyPipe,
     ImageFallbackDirective,
+    ProductFilterBarComponent
   ],
   templateUrl: './admin-products.component.html',
   styleUrl: './admin-products.component.scss',
@@ -25,6 +27,9 @@ export class AdminProductsComponent implements OnInit {
 
   products: Product[] = [];
   isLoading = false;
+  errorMessage = '';
+  searchKeyword = '';
+  selectedCategory = 'all';
 
   //phân trang 
   currentPage = 1;
@@ -45,8 +50,23 @@ export class AdminProductsComponent implements OnInit {
   }
 
   loadProducts(): void {
+    this.errorMessage = '';
     this.isLoading = true;
-    this.productService.getProducts(this.currentPage, this.pageSize).subscribe({
+    const keyword = this.searchKeyword.trim();
+    let request$;
+
+    if (keyword) {
+      // Tìm kiếm theo từ khóa
+      request$ = this.productService.searchProducts(keyword, this.currentPage, this.pageSize);
+    } else if (this.selectedCategory && this.selectedCategory !== 'all') {
+      // Lọc theo danh mục
+      request$ = this.productService.getProductsByCategory(this.selectedCategory, this.currentPage, this.pageSize);
+    } else {
+      // Mặc định lấy toàn bộ
+      request$ = this.productService.getProducts(this.currentPage, this.pageSize);
+    }
+
+    request$.subscribe({
       next: (res) => {
         this.products = res.products;
         this.totalProducts = res.total;
@@ -56,6 +76,7 @@ export class AdminProductsComponent implements OnInit {
         console.error('Lỗi khi tải danh sách:', err);
         this.toastService.error('Không thể tải danh sách sản phẩm!');
         this.isLoading = false;
+        this.errorMessage = 'Không thể kết nối đến máy chủ DummyJSON...';
       },
     });
   }
@@ -101,5 +122,15 @@ export class AdminProductsComponent implements OnInit {
         this.closeDeleteModal();
       },
     });
+  }
+  onCategoryChange(category: string): void {
+    this.selectedCategory = category;
+    this.currentPage = 1;
+    this.loadProducts();
+  }
+  onSearchChange(keyword: string): void {
+    this.searchKeyword = keyword;
+    this.currentPage = 1;
+    this.loadProducts();
   }
 }
