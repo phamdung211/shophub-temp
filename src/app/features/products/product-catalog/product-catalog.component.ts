@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { Product } from '../../../core/model/product.model';
 import { ProductService } from '../../../core/services/product.service';
 import { CartService } from '../../../core/services/cart.service';
@@ -18,6 +19,7 @@ export class ProductCatalogComponent implements OnInit {
   private productService = inject(ProductService);
   private cartService = inject(CartService);
   private toastService = inject(ToastService);
+  private router = inject(Router);
   products: Product[] = [];
   isLoading = false;
   errorMessage = '';
@@ -184,6 +186,11 @@ export class ProductCatalogComponent implements OnInit {
   onAddToCart(product: Product): void {
     this.cartService.addToCart(product, 1);
     // this.toastService.success(`Đã thêm "${product.title}" vào giỏ hàng! 🛒`);
+  }
+
+  onBuyNow(product: Product): void {
+    this.cartService.addToCart(product, 1);
+    this.router.navigate(['/cart']);
   }
   @Input() set category(val: string | undefined) {
     this.selectedCategory = val || 'all';

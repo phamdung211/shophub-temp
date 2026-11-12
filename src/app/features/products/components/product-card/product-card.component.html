@@ -45,15 +45,32 @@
     <span class="text-red-600">Hết hàng</span>
     }
   </p>
-  <div class="mt-4 flex gap-2">
-    <button type="button" class="flex-1 rounded-lg px-4 py-2 text-white transition"
-      [ngClass]="!isOutOfStock() ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 cursor-not-allowed'"
-      (click)="onBuyClick()" [disabled]="isOutOfStock()">
-      {{ isOutOfStock() ? (product.stock <= 0 ? "Hết hàng" : "Đã có hết trong giỏ" ) : "Mua ngay" }} </button>
+  <div class="mt-4 flex items-center gap-2">
+    <!-- Nút 1: Thêm vào giỏ hàng (Icon xe đẩy) -->
+    <button
+      type="button"
+      (click)="onAddToCartClick($event)"
+      [disabled]="isOutOfStock()"
+      [title]="isOutOfStock() ? 'Không thể thêm vào giỏ' : 'Thêm vào giỏ hàng'"
+      class="flex items-center justify-center p-2.5 rounded-lg border text-base transition shadow-sm"
+      [ngClass]="!isOutOfStock() 
+        ? 'bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-100 hover:border-blue-300' 
+        : 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'"
+    >
+      <span>🛒</span>
+    </button>
 
-        <!-- <button type="button" class="rounded-lg bg-red-600 px-4 py-2 text-white transition hover:bg-red-700"
-          (click)="onDeleteClick()">
-          Xóa
-        </button> -->
+    <!-- Nút 2: Mua ngay (Thêm vào giỏ và chuyển tới trang giỏ hàng) -->
+    <button
+      type="button"
+      (click)="onBuyNowClick($event)"
+      [disabled]="isOutOfStock()"
+      class="flex-1 rounded-lg px-3 py-2.5 text-sm font-semibold text-white transition shadow-sm text-center"
+      [ngClass]="!isOutOfStock() 
+        ? 'bg-blue-600 hover:bg-blue-700 active:scale-[0.98]' 
+        : 'bg-gray-400 cursor-not-allowed'"
+    >
+      {{ isOutOfStock() ? (product.stock <= 0 ? "Hết hàng" : "Hết tồn kho") : "Mua ngay" }}
+    </button>
   </div>
 </div>
