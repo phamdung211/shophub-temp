@@ -1,0 +1,183 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- 1. Header Toolbar -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <span>📦</span> Quản Lý Hàng Hóa
+            </h1>
+            <p class="text-sm text-gray-500 mt-1">
+                Tổng số: <strong class="text-blue-600">{{ totalProducts }}</strong> sản phẩm trong kho
+            </p>
+        </div>
+
+        <a routerLink="/admin/products/create"
+            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-medium text-sm rounded-xl hover:bg-blue-700 shadow-sm transition">
+            <span>➕</span> Thêm Sản Phẩm Mới
+        </a>
+    </div>
+
+    <!-- Dumb Component: Bộ lọc & Thanh tìm kiếm tức thì RxJS Live Search -->
+    <app-product-filter-bar [selectedCategory]="selectedCategory" (searchChange)="onSearchChange($event)"
+        (categoryChange)="onCategoryChange($event)" />
+
+    <!-- Thông báo trạng thái tìm kiếm / lọc -->
+    @if (searchKeyword) {
+    <div
+        class="mb-6 flex items-center justify-between rounded-xl bg-blue-50/70 px-4 py-2.5 border border-blue-100 text-sm text-blue-900">
+        <div class="flex items-center gap-2">
+            <span>🔍</span>
+            <span>
+                Kết quả tìm kiếm cho: "<strong>{{ searchKeyword }}</strong>"
+            </span>
+        </div>
+        <span class="font-medium text-xs bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full">
+            Tìm thấy {{ totalProducts }} sản phẩm
+        </span>
+    </div>
+    }
+
+    <!-- Trạng thái lỗi mạng / API -->
+    @if (errorMessage) {
+    <div class="rounded-xl border border-red-200 bg-red-50 p-6 text-center my-6">
+        <div class="text-3xl mb-2">⚠️</div>
+        <h3 class="text-base font-semibold text-red-800">{{ errorMessage }}</h3>
+        <p class="text-xs text-red-600 mt-1 mb-4">
+            Vui lòng kiểm tra lại kết nối Internet của bạn hoặc thử lại sau vài giây.
+        </p>
+        <button type="button" (click)="loadProducts()"
+            class="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 transition shadow-sm">
+            <span>🔄</span> Thử lại
+        </button>
+    </div>
+    }
+
+    <!-- 2. Data Table Card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+        @if (isLoading) {
+        <div class="p-12 text-center text-gray-500">
+            <div
+                class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent mb-3">
+            </div>
+            <p class="text-sm font-medium">Đang tải danh sách sản phẩm...</p>
+        </div>
+        } @else {
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-gray-600">
+                <thead class="bg-gray-50 text-xs uppercase font-semibold text-gray-700 border-b border-gray-200">
+                    <tr>
+                        <th class="px-6 py-4">Mã #ID</th>
+                        <th class="px-6 py-4">Sản Phẩm</th>
+                        <th class="px-6 py-4">Danh Mục</th>
+                        <th class="px-6 py-4">Giá Bán</th>
+                        <th class="px-6 py-4">Tồn Kho</th>
+                        <th class="px-6 py-4 text-right">Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    @for (item of products; track item.id) {
+                    <tr class="hover:bg-gray-50/80 transition">
+                        <!-- ID -->
+                        <td class="px-6 py-4 font-mono text-xs text-gray-400">
+                            #{{ item.id }}
+                        </td>
+
+                        <!-- Sản phẩm (Ảnh + Tên) -->
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <img [src]="item.thumbnail" [alt]="item.title" appImageFallback
+                                    class="w-12 h-12 rounded-lg object-cover bg-gray-100 border border-gray-200 flex-shrink-0" />
+                                <div>
+                                    <div class="font-semibold text-gray-900 line-clamp-1 max-w-xs" [title]="item.title">
+                                        {{ item.title }}
+                                    </div>
+                                    <div class="text-xs text-gray-400 mt-0.5">{{ item.brand }}</div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Danh mục -->
+                        <td class="px-6 py-4">
+                            <span
+                                class="inline-block px-2.5 py-1 text-xs font-medium rounded-full bg-blue-50 text-blue-700 border border-blue-100">
+                                {{ item.category }}
+                            </span>
+                        </td>
+
+                        <!-- Giá bán -->
+                        <td class="px-6 py-4 font-semibold text-gray-900">
+                            {{ item.price | vndCurrency }}
+                        </td>
+
+                        <!-- Tồn kho -->
+                        <td class="px-6 py-4">
+                            @if (item.stock === 0) {
+                            <span
+                                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-red-100 text-red-800">
+                                Hết hàng
+                            </span>
+                            } @else if (item.stock <= 5) { <span
+                                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-amber-100 text-amber-800">
+                                Sắp hết ({{ item.stock }})
+                                </span>
+                                } @else {
+                                <span class="text-gray-700 font-medium">{{ item.stock }} cái</span>
+                                }
+                        </td>
+
+                        <!-- Cột Thao Tác (Sửa & Xóa) -->
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <!-- Nút Sửa -->
+                                <a [routerLink]="['/admin/products/edit', item.id]"
+                                    class="px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition"
+                                    title="Chỉnh sửa sản phẩm">
+                                    ✏️ Sửa
+                                </a>
+
+                                <!-- Nút Xóa -->
+                                <button type="button" (click)="openDeleteModal(item)"
+                                    class="px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition"
+                                    title="Xóa sản phẩm">
+                                    🗑️ Xóa
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    } @empty {
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center text-gray-400">
+                            Kho hàng đang trống. Chưa có sản phẩm nào!
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 3. Pagination Footer -->
+        @if (totalPages > 1) {
+        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+            <span class="text-xs text-gray-500">
+                Trang {{ currentPage }} / {{ totalPages }}
+            </span>
+            <div class="flex gap-2">
+                <button type="button" [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)"
+                    class="px-3 py-1.5 text-xs font-medium rounded-lg border bg-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-100 transition">
+                    ◀ Trước
+                </button>
+                <button type="button" [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)"
+                    class="px-3 py-1.5 text-xs font-medium rounded-lg border bg-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-100 transition">
+                    Sau ▶
+                </button>
+            </div>
+        </div>
+        }
+        }
+    </div>
+
+    <!-- 4. Nhúng Modal Xác Nhận Xóa -->
+    <app-confirm-modal [isOpen]="isDeleteModalOpen" title="Xác nhận xóa sản phẩm"
+        [message]="'Bạn có chắc chắn muốn xóa sản phẩm \'' + (productToDelete?.title || '') + '\'? Thao tác này không thể hoàn tác.'"
+        confirmText="Xóa sản phẩm" cancelText="Hủy bỏ" [isDanger]="true" (confirm)="confirmDelete()"
+        (cancel)="closeDeleteModal()" />
+</div>

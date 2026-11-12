@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 import { Product, ProductCategory } from '../model/product.model';
 import { PaginatedResponse } from '../model/api-response.model';
 
@@ -10,6 +10,41 @@ import { PaginatedResponse } from '../model/api-response.model';
 export class ProductService {
   private http = inject(HttpClient);
   private readonly apiUrl = 'https://dummyjson.com/products';
+  // Thêm hằng số key lưu trữ
+  private readonly LOCAL_PRODUCTS_KEY = 'shophub_local_products';
+
+  /**
+   * Đọc danh sách sản phẩm do người dùng tự tạo từ localStorage
+   */
+  private getLocalProducts(): Product[] {
+    const data = localStorage.getItem(this.LOCAL_PRODUCTS_KEY);
+    return data ? JSON.parse(data) : [];
+  }
+
+  /**
+   * Lưu sản phẩm mới tạo vào đầu danh sách trong localStorage
+   */
+  private saveLocalProduct(product: Product): void {
+    const current = this.getLocalProducts();
+    // Đưa sản phẩm mới lên đầu mảng
+    const updated = [product, ...current];
+    localStorage.setItem(this.LOCAL_PRODUCTS_KEY, JSON.stringify(updated));
+  }
+
+  /**
+   * Xóa sản phẩm tự tạo khỏi localStorage
+   */
+  private removeLocalProduct(id: number | string): boolean {
+    const current = this.getLocalProducts();
+    // Lọc bỏ sản phẩm cần xóa (so sánh String để an toàn cả ID dạng số và chuỗi)
+    const updated = current.filter((p) => String(p.id) !== String(id));
+
+    if (updated.length !== current.length) {
+      localStorage.setItem(this.LOCAL_PRODUCTS_KEY, JSON.stringify(updated));
+      return true; // Đã tìm thấy và xóa thành công trong local
+    }
+    return false; // Không nằm trong local (là sản phẩm gốc của DummyJSON)
+  }
 
   /**
    * Lấy danh sách sản phẩm có phân trang từ DummyJSON API
@@ -22,7 +57,20 @@ export class ProductService {
       .set('limit', limit.toString())
       .set('skip', skip.toString());
 
-    return this.http.get<PaginatedResponse<Product>>(this.apiUrl, { params });
+    return this.http.get<PaginatedResponse<Product>>(this.apiUrl, { params }).pipe(
+      map((res) => {
+        // Khi ở trang 1, chèn sản phẩm mới tạo lên đầu danh sách
+        if (page === 1) {
+          const local = this.getLocalProducts();
+          return {
+            ...res,
+            products: [...local, ...res.products],
+            total: res.total + local.length,
+          };
+        }
+        return res;
+      })
+    );
   }
 
   /**
@@ -30,6 +78,13 @@ export class ProductService {
    * @param id ID của sản phẩm
    */
   getProductById(id: number | string): Observable<Product> {
+    const localList = this.getLocalProducts();
+    const localProduct = localList.find((p) => String(p.id) === String(id));
+
+    if (localProduct) {
+      return of(localProduct);
+    }
+
     return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
 
@@ -50,7 +105,23 @@ export class ProductService {
       .set('limit', limit.toString())
       .set('skip', skip.toString());
 
-    return this.http.get<PaginatedResponse<Product>>(`${this.apiUrl}/search`, { params });
+    return this.http.get<PaginatedResponse<Product>>(`${this.apiUrl}/search`, { params }).pipe(
+      map((res) => {
+        const localList = this.getLocalProducts();
+        const searchKey = keyword.trim().toLowerCase();
+
+        const matchedProducts = localList.filter((p) => p.title.toLowerCase().includes(searchKey));
+        if (page === 1) {
+          return {
+            ...res, // Giữ nguyên các thuộc tính khác của server (skip, limit...)
+            products: [...matchedProducts, ...res.products], // Đưa hàng local lên trước
+            total: res.total + matchedProducts.length, // Cộng thêm số lượng vào tổng
+          };
+        }
+        return res;
+      })
+
+    )
   }
 
   /**
@@ -72,7 +143,21 @@ export class ProductService {
     return this.http.get<PaginatedResponse<Product>>(
       `${this.apiUrl}/category/${encodeURIComponent(category)}`,
       { params },
-    );
+    ).pipe(map((res) => {
+      const localList = this.getLocalProducts();
+
+      const categories = category.trim().toLowerCase();
+
+      const matchedProducts = localList.filter((p) => p.category.toLowerCase().includes(categories));
+      if (page === 1) {
+        return {
+          ...res,
+          products: [...matchedProducts, ...res.products],
+          total: res.total + matchedProducts.length,
+        };
+      }
+      return res;
+    }))
   }
 
   /**
@@ -94,7 +179,21 @@ export class ProductService {
    * @param product Dữ liệu sản phẩm mới
    */
   addProduct(product: Partial<Product>): Observable<Product> {
-    return this.http.post<Product>(`${this.apiUrl}/add`, product);
+    return this.http.post<Product>(`${this.apiUrl}/add`, product).pipe(
+      // Đổi 'tap' thành 'map' để biến đổi dữ liệu trả về cho component
+      map((createdProduct) => {
+        const productWithUniqueId: Product = {
+          ...(createdProduct as Product),
+          id: Date.now(), // Sinh mã số duy nhất theo thời gian
+        };
+
+        // 1. Lưu vào localStorage
+        this.saveLocalProduct(productWithUniqueId);
+
+        // 2. Return để component nhận được ID mới này
+        return productWithUniqueId;
+      })
+    );
   }
 
   /**
@@ -102,8 +201,66 @@ export class ProductService {
    * @param id ID của sản phẩm cần xóa
    */
   deleteProduct(id: number | string): Observable<Product & { isDeleted?: boolean; deletedOn?: string }> {
+    // 1. Kiểm tra và xóa trong localStorage trước
+    const isLocal = this.removeLocalProduct(id);
+
+    // 2. Nếu là hàng local: Trả về thành công luôn, không gọi API DummyJSON
+    if (isLocal) {
+      return of({ id, isDeleted: true } as any);
+    }
+
+    // 3. Nếu là hàng của server: Gửi API xóa bình thường
     return this.http.delete<Product & { isDeleted?: boolean; deletedOn?: string }>(
-      `${this.apiUrl}/${id}`,
+      `${this.apiUrl}/${id}`
     );
+  }
+
+  /**
+ * Cập nhật sản phẩm qua API PUT hoặc cập nhật trong localStorage nếu là hàng local
+ * @param id ID sản phẩm cần cập nhật
+ * @param product Dữ liệu mới cần thay đổi
+ */
+  updateProduct(id: number | string, product: Partial<Product>): Observable<Product> {
+    //kiểm tra và cập nhật nếu là hàng local
+    const updatedLocal = this.updateLocalProduct(id, product);
+    if (updatedLocal) {
+      return of(updatedLocal); // Trả về Observable hoàn thành ngay lập tức
+    }
+
+    //nếu là hàng của server DummyJSON: gửi HTTP PUT request
+    return this.http.put<Product>(`${this.apiUrl}/${id}`, product);
+  }
+
+  /**
+   * Cập nhật thông tin sản phẩm tự tạo trong localStorage
+   * @param id ID của sản phẩm cần sửa
+   * @param updatedFields Các trường thông tin cần cập nhật
+   * @returns Product sau khi cập nhật hoặc null nếu sản phẩm không nằm trong local
+   */
+  private updateLocalProduct(
+    id: number | string,
+    updatedFields: Partial<Product>
+  ): Product | null {
+    const current = this.getLocalProducts();
+    //tìm vị trí của sản phẩm trong mảng
+    const index = current.findIndex((p) => String(p.id) === String(id));
+
+    //không tìm thấy trong local -> trả về null để báo hiệu là hàng của server
+    if (index === -1) {
+      return null;
+    }
+
+    //gộp dữ liệu: giữ nguyên thông tin cũ, ghi đè các trường mới
+    const updatedProduct: Product = {
+      ...current[index],
+      ...updatedFields,
+      id: current[index].id, // Đảm bảo ID gốc không bị ghi đè vô tình
+    };
+
+    //cập nhật lại vào mảng và lưu bền vững vào localStorage
+    current[index] = updatedProduct;
+    localStorage.setItem(this.LOCAL_PRODUCTS_KEY, JSON.stringify(current));
+
+    return updatedProduct;
   }
 }

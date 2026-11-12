@@ -1,5 +1,5 @@
 <div class="product-form-container">
-  <h2>Thêm sản phẩm mới</h2>
+  <h2>{{ isEditMode ? 'Chỉnh sửa sản phẩm #' + id : 'Thêm sản phẩm mới' }}</h2>
 
   <form [formGroup]="productForm" (ngSubmit)="onSubmit()" novalidate>
     <div class="form-field">
@@ -10,7 +10,7 @@
     </div>
 
     <div class="form-field">
-      <label for="price">Giá sản phẩm (VNĐ)</label>
+      <label for="price">Giá sản phẩm (USD)</label>
       <input id="price" type="number" min="0" step="any" formControlName="price" />
 
       <app-validation-message [control]="productForm.controls.price" label="Giá sản phẩm" />
@@ -75,7 +75,7 @@
     </div>
 
     <button type="submit" [disabled]="productForm.invalid || isSubmitting">
-      {{ isSubmitting ? 'Đang lưu...' : 'Lưu sản phẩm' }}
+      {{ isSubmitting ? 'Đang lưu...' : (isEditMode ? 'Cập nhật sản phẩm' : 'Lưu sản phẩm') }}
     </button>
   </form>
 </div>

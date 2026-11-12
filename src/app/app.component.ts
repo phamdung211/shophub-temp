@@ -6,6 +6,7 @@ import { ProductCardComponent } from './features/products/components/product-car
 import type { Product } from './core/model/product.model';
 import { ProductCatalogComponent } from './features/products/product-catalog/product-catalog.component';
 import { LoadingService } from './core/services/loading.service';
+import { ToastComponent } from './shared/components/toast/toast.component';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -15,6 +16,7 @@ import { LoadingService } from './core/services/loading.service';
     FooterComponent,
     ProductCardComponent,
     ProductCatalogComponent,
+    ToastComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

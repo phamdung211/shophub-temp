@@ -1,24 +1,15 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
+import { CurrencyService } from '../../core/services/currency.service';
 
 @Pipe({
   name: 'vndCurrency',
   standalone: true,
-  pure: true,
+  pure: false,
 })
 export class VndCurrencyPipe implements PipeTransform {
   private readonly exchangeRate = 25400;
-
+  private currencyService = inject(CurrencyService);
   transform(usd: number | null | undefined): string {
-    if (usd == null || !Number.isFinite(usd)) {
-      return '—';
-    }
-
-    const vnd = usd * this.exchangeRate;
-
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
-      maximumFractionDigits: 0,
-    }).format(vnd);
+    return this.currencyService.format(usd);
   }
 }

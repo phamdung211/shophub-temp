@@ -5,10 +5,11 @@ import {
 } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
+import { ToastService } from '../services/toast.service';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     const router = inject(Router);
-
+    const toastService = inject(ToastService);
     return next(req).pipe(
         catchError((error: HttpErrorResponse) => {
             switch (error.status) {
@@ -16,16 +17,16 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
                     // Xóa token vì phiên đăng nhập không còn hợp lệ
                     localStorage.removeItem('token');
 
-                    alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+                    toastService.warning('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
                     router.navigate(['/login']);
                     break;
 
                 case 403:
-                    alert('Bạn không có quyền truy cập tài nguyên này.');
+                    toastService.error('Bạn không có quyền truy cập tài nguyên này.');
                     break;
 
                 case 500:
-                    alert('Máy chủ đang gặp sự cố. Vui lòng thử lại sau.');
+                    toastService.error('Máy chủ đang gặp sự cố. Vui lòng thử lại sau.');
                     break;
 
                 default:

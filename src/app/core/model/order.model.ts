@@ -9,6 +9,11 @@ export type OrderStatus =
   | "cancelled";
 
 export interface Order extends BaseEntity {
+  userId: number;
+  customerName: string;
+  customerPhone: string;
+  paymentMethod: 'cod' | 'banking';
+  note?: string;
   items: CartItem[];
   totalAmount: number;
   shippingAddress: string;

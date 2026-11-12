@@ -1,0 +1,193 @@
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Breadcrumb dẫn hướng -->
+    <nav class="flex items-center gap-2 text-sm text-gray-500 mb-6">
+        <a routerLink="/cart" class="hover:text-blue-600 transition">Giỏ hàng</a>
+        <span>/</span>
+        <span class="text-gray-900 font-medium">Thanh toán</span>
+    </nav>
+
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-8">Thông tin thanh toán & Đặt hàng</h1>
+
+    <!-- Lưới 2 cột -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- CỘT TRÁI: FORM ĐẶT HÀNG -->
+        <div class="lg:col-span-2">
+            <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()" class="space-y-6">
+                <!-- Khối 1: Thông tin người nhận -->
+                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+                    <h2 class="text-lg font-bold text-gray-900 border-b border-gray-100 pb-3 flex items-center gap-2">
+                        <span>📍</span> Thông tin giao hàng
+                    </h2>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Họ và tên -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Họ và tên *</label>
+                            <input type="text" formControlName="customerName" placeholder="Nguyễn Văn A"
+                                class="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition"
+                                [class.border-red-500]="checkoutForm.get('customerName')?.touched && checkoutForm.get('customerName')?.invalid" />
+                            @if (checkoutForm.get('customerName')?.touched && checkoutForm.get('customerName')?.invalid)
+                            {
+                            <p class="text-xs text-red-500 mt-1">Họ tên tối thiểu 3 ký tự.</p>
+                            }
+                        </div>
+
+                        <!-- Số điện thoại -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Số điện thoại *</label>
+                            <input type="text" formControlName="customerPhone" placeholder="0912345678"
+                                class="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition"
+                                [class.border-red-500]="checkoutForm.get('customerPhone')?.touched && checkoutForm.get('customerPhone')?.invalid" />
+                            @if (checkoutForm.get('customerPhone')?.touched &&
+                            checkoutForm.get('customerPhone')?.invalid) {
+                            <p class="text-xs text-red-500 mt-1">Số điện thoại không hợp lệ (10 chữ số VN).</p>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Địa chỉ nhận hàng -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Địa chỉ nhận hàng chi tiết *</label>
+                        <input type="text" formControlName="shippingAddress"
+                            placeholder="Số nhà, tên đường, phường/xã, quận/huyện..."
+                            class="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition"
+                            [class.border-red-500]="checkoutForm.get('shippingAddress')?.touched && checkoutForm.get('shippingAddress')?.invalid" />
+                        @if (checkoutForm.get('shippingAddress')?.touched &&
+                        checkoutForm.get('shippingAddress')?.invalid) {
+                        <p class="text-xs text-red-500 mt-1">Vui lòng nhập địa chỉ cụ thể (tối thiểu 10 ký tự).</p>
+                        }
+                    </div>
+
+                    <!-- Ghi chú đơn hàng -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Ghi chú cho shipper (tuỳ
+                            chọn)</label>
+                        <textarea formControlName="note" rows="2"
+                            placeholder="Ví dụ: Giao giờ hành chính, gọi trước khi giao..."
+                            class="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition"></textarea>
+                    </div>
+                </div>
+
+                <!-- Khối 2: Phương thức thanh toán -->
+                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+                    <h2 class="text-lg font-bold text-gray-900 border-b border-gray-100 pb-3 flex items-center gap-2">
+                        <span>💳</span> Phương thức thanh toán
+                    </h2>
+
+                    <div class="space-y-3">
+                        <!-- Lựa chọn COD -->
+                        <label
+                            class="flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:bg-gray-50 transition"
+                            [class.border-blue-600]="checkoutForm.get('paymentMethod')?.value === 'cod'"
+                            [class.bg-blue-50]="checkoutForm.get('paymentMethod')?.value === 'cod'">
+                            <input type="radio" value="cod" formControlName="paymentMethod"
+                                class="text-blue-600 focus:ring-blue-500" />
+                            <div>
+                                <p class="text-sm font-semibold text-gray-900">💵 Thanh toán khi nhận hàng (COD)</p>
+                                <p class="text-xs text-gray-500">Thanh toán bằng tiền mặt khi shipper giao hàng tới nơi.
+                                </p>
+                            </div>
+                        </label>
+
+                        <!-- Lựa chọn Chuyển khoản -->
+                        <label
+                            class="flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:bg-gray-50 transition"
+                            [class.border-blue-600]="checkoutForm.get('paymentMethod')?.value === 'banking'"
+                            [class.bg-blue-50]="checkoutForm.get('paymentMethod')?.value === 'banking'">
+                            <input type="radio" value="banking" formControlName="paymentMethod"
+                                class="text-blue-600 focus:ring-blue-500" />
+                            <div>
+                                <p class="text-sm font-semibold text-gray-900">🏦 Chuyển khoản ngân hàng (QR Code /
+                                    Internet Banking)</p>
+                                <p class="text-xs text-gray-500">Chuyển khoản trực tiếp tới tài khoản ngân hàng của cửa
+                                    hàng.</p>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Thông tin chuyển khoản khi chọn Banking -->
+                    @if (checkoutForm.get('paymentMethod')?.value === 'banking') {
+                    <div
+                        class="p-4 rounded-xl bg-blue-50/70 border border-blue-200 text-sm text-blue-900 space-y-1 mt-3">
+                        <p class="font-bold flex items-center gap-1.5">
+                            <span>ℹ️</span> Hướng dẫn chuyển khoản:
+                        </p>
+                        <p>Ngân hàng: <strong>MB Bank / Vietcombank</strong></p>
+                        <p>Số tài khoản: <strong class="text-blue-700">999988886666</strong></p>
+                        <p>Chủ tài khoản: <strong>CONG TY SHOPHUB VIET NAM</strong></p>
+                        <p class="text-xs text-blue-700 mt-2">* Vui lòng ghi nội dung: <strong>Họ tên + SĐT đặt
+                                hàng</strong></p>
+                    </div>
+                    }
+                </div>
+            </form>
+        </div>
+
+        <!-- CỘT PHẢI: TÓM TẮT ĐƠN HÀNG -->
+        <div class="lg:col-span-1">
+            <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm sticky top-6 space-y-6">
+                <h2
+                    class="text-lg font-bold text-gray-900 border-b border-gray-100 pb-3 flex items-center justify-between">
+                    <span>Tóm tắt đơn hàng</span>
+                    <span class="text-xs font-normal text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">
+                        {{ cartService.totalItemsCount() }} sản phẩm
+                    </span>
+                </h2>
+
+                <!-- Danh sách sản phẩm mua tóm tắt -->
+                <div class="max-h-64 overflow-y-auto divide-y divide-gray-100 pr-1 space-y-2">
+                    @for (item of cartService.cartItems(); track item.product.id) {
+                    <div class="flex items-center gap-3 py-2.5">
+                        <img [src]="item.product.thumbnail" [alt]="item.product.title"
+                            class="w-12 h-12 rounded-lg object-cover border border-gray-100 flex-shrink-0" />
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900 truncate">{{ item.product.title }}</p>
+                            <p class="text-xs text-gray-400">Số lượng: x{{ item.quantity }}</p>
+                        </div>
+                        <span class="text-sm font-semibold text-gray-900">
+                            {{ item.product.price | discountCalculator: item.product.discountPercentage | vndCurrency }}
+                        </span>
+                    </div>
+                    }
+                </div>
+
+                <!-- Bảng tính tổng tiền -->
+                <div class="border-t border-gray-100 pt-4 space-y-2.5 text-sm">
+                    <div class="flex justify-between text-gray-600">
+                        <span>Tạm tính hàng:</span>
+                        <span class="font-medium text-gray-900">{{ cartService.totalCartPrice() | vndCurrency }}</span>
+                    </div>
+                    <div class="flex justify-between text-gray-600">
+                        <span>Phí vận chuyển:</span>
+                        <span class="font-semibold text-emerald-600">Miễn phí</span>
+                    </div>
+                    <div class="border-t border-gray-200 pt-3 flex justify-between items-baseline">
+                        <span class="text-base font-bold text-gray-900">Tổng thanh toán:</span>
+                        <span class="text-2xl font-extrabold text-blue-600">
+                            {{ cartService.totalCartPrice() | vndCurrency }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Nút bấm Đặt Hàng -->
+                <button type="button" (click)="onSubmit()" [disabled]="isSubmitting()"
+                    class="w-full rounded-xl bg-blue-600 py-3.5 px-4 text-center font-bold text-white shadow-md hover:bg-blue-700 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center justify-center gap-2">
+                    @if (isSubmitting()) {
+                    <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                        </circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                    </svg>
+                    <span>Đang xử lý đặt hàng...</span>
+                    } @else {
+                    <span>🛒 Xác nhận đặt hàng</span>
+                    }
+                </button>
+
+                <p class="text-xs text-gray-400 text-center">
+                    Nhấn "Xác nhận đặt hàng" đồng nghĩa với việc bạn đồng ý với Điều khoản mua bán của ShopHub.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

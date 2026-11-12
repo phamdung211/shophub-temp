@@ -7,6 +7,7 @@ import {
   OnChanges,
   OnDestroy,
   SimpleChanges,
+  inject,
 } from '@angular/core';
 
 import { DecimalPipe, NgClass } from '@angular/common';
@@ -18,6 +19,7 @@ import { DiscountCalculatorPipe } from '../../../../shared/pipes/discount-calcul
 import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
 import { ImageFallbackDirective } from '../../../../shared/directives/image-fallback.directive';
 import { HoverCardDirective } from '../../../../shared/directives/hover-card.directive';
+import { CartService } from '../../../../core/services/cart.service';
 
 @Component({
   selector: 'app-product-card',
@@ -36,6 +38,8 @@ import { HoverCardDirective } from '../../../../shared/directives/hover-card.dir
   styleUrl: './product-card.component.scss',
 })
 export class ProductCardComponent implements OnInit, OnChanges, OnDestroy {
+  private readonly cartService = inject(CartService);
+
   @Input({ required: true }) product!: Product;
 
   @Output() addToCart = new EventEmitter<Product>();
@@ -58,5 +62,12 @@ export class ProductCardComponent implements OnInit, OnChanges, OnDestroy {
   }
   onDeleteClick(): void {
     this.delete.emit(this.product);
+  }
+  isOutOfStock(): boolean {
+    if (!this.product || this.product.stock == null || this.product.stock <= 0) {
+      return true;
+    }
+    const inCart = this.cartService.getItemQuantity(this.product.id);
+    return inCart >= this.product.stock;
   }
 }

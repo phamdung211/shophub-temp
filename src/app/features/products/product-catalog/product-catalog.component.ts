@@ -2,8 +2,10 @@ import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '../../../core/model/product.model';
 import { ProductService } from '../../../core/services/product.service';
+import { CartService } from '../../../core/services/cart.service';
 import { ProductCardComponent } from '../components/product-card/product-card.component';
 import { ProductFilterBarComponent } from '../product-filter-bar/product-filter-bar.component';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-product-catalog',
@@ -14,7 +16,8 @@ import { ProductFilterBarComponent } from '../product-filter-bar/product-filter-
 })
 export class ProductCatalogComponent implements OnInit {
   private productService = inject(ProductService);
-
+  private cartService = inject(CartService);
+  private toastService = inject(ToastService);
   products: Product[] = [];
   isLoading = false;
   errorMessage = '';
@@ -146,27 +149,41 @@ export class ProductCatalogComponent implements OnInit {
   }
 
   deleteProduct(product: Product): void {
-    const confirmed = confirm(`Bạn có chắc muốn xóa "${product.title}" không?`);
-    if (!confirmed) {
+    // Kiểm tra xem món này có đang nằm trong giỏ hàng không
+    const isInCart = this.cartService.getItemQuantity(product.id) > 0;
+
+    // Nội dung cảnh báo thông minh
+    const confirmMessage = isInCart
+      ? `⚠️ Sản phẩm "${product.title}" ĐANG CÓ TRONG GIỎ HÀNG!\n\nNếu bạn xóa, sản phẩm này cũng sẽ bị gỡ khỏi giỏ hàng. Bạn có chắc chắn muốn xóa không?`
+      : `Bạn có chắc muốn xóa "${product.title}" không?`;
+
+    if (!confirm(confirmMessage)) {
       return;
     }
 
     this.productService.deleteProduct(product.id).subscribe({
       next: () => {
-        // DummyJSON chỉ giả lập xóa, ta xóa trực tiếp trên danh sách hiện tại
-        this.products = this.products.filter((p) => p.id !== product.id);
+        // Xóa trên danh sách hiển thị
+        this.products = this.products.filter((p) => String(p.id) !== String(product.id));
         this.totalProducts = Math.max(0, this.totalProducts - 1);
-        alert(`Đã xóa sản phẩm "${product.title}" thành công!`);
+
+        // Đồng thời gỡ khỏi giỏ hàng nếu đang có trong giỏ
+        if (isInCart) {
+          this.cartService.removeFromCart(product.id);
+        }
+
+        this.toastService.success(`Đã xóa sản phẩm "${product.title}" thành công!`);
       },
       error: (err) => {
         console.error('Lỗi khi xóa sản phẩm:', err);
-        alert('Có lỗi xảy ra khi xóa sản phẩm!');
+        this.toastService.error('Có lỗi xảy ra khi xóa sản phẩm!');
       },
     });
   }
 
   onAddToCart(product: Product): void {
-    alert(`Đã thêm "${product.title}" vào giỏ hàng!`);
+    this.cartService.addToCart(product, 1);
+    // this.toastService.success(`Đã thêm "${product.title}" vào giỏ hàng! 🛒`);
   }
   @Input() set category(val: string | undefined) {
     this.selectedCategory = val || 'all';
