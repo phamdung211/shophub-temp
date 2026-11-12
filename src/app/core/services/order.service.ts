@@ -40,10 +40,12 @@ export class OrderService {
         //gọi POST lên API
         return this.http.post<any>(this.API_URL, payload).pipe(
             map((response) => {
-                //tạo đối tượng Order hoàn chỉnh (kèm ID DummyJSON trả về)
+                // DummyJSON là mock API nên luôn trả về cố định response.id = 209
+                // Sử dụng Date.now() để mỗi đơn hàng có ID duy nhất, tránh trùng lặp key trong LocalStorage và UI
+                const uniqueId = Date.now();
                 const newOrder: Order = {
                     ...orderData,
-                    id: response.id || Date.now(),
+                    id: uniqueId,
                     status: 'pending',
                     createdAt: new Date().toISOString(),
                 };
@@ -61,5 +63,23 @@ export class OrderService {
     getOrderById(orderId: number | string): Order | undefined {
         return this.ordersSignal().find((order) => String(order.id) === String(orderId));
     }
+
+    /**
+    * Hủy đơn hàng khi còn ở trạng thái pending
+    */
+    cancelOrder(orderId: number): boolean {
+        let isCancelled = false;
+        this.ordersSignal.update((orders) =>
+            orders.map((order) => {
+                if (order.id === orderId && order.status === 'pending') {
+                    isCancelled = true;
+                    return { ...order, status: 'cancelled' as const };
+                }
+                return order;
+            })
+        );
+        return isCancelled;
+    }
+
     readonly orders = this.ordersSignal.asReadonly();
 }

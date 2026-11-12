@@ -6,6 +6,8 @@ export interface User extends BaseEntity {
   email: string;
   username: string;
   image: string;
+  phone?: string;
+  gender?: string;
 }
 
 export interface LoginCredentials {
