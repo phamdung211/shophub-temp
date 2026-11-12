@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, signal, effect } from "@angular/core";
 import { StorageService } from "./storage.service";
-import { Order } from "../model/order.model";
+import { Order, OrderStatus } from "../model/order.model";
 import { Observable, map } from "rxjs";
 
 @Injectable({
@@ -62,6 +62,23 @@ export class OrderService {
     */
     getOrderById(orderId: number | string): Order | undefined {
         return this.ordersSignal().find((order) => String(order.id) === String(orderId));
+    }
+
+    /**
+    * Cập nhật trạng thái đơn hàng (Dành cho Admin hoặc Demo/Test luồng giao vận)
+    */
+    updateOrderStatus(orderId: number, status: OrderStatus): boolean {
+        let isUpdated = false;
+        this.ordersSignal.update((orders) =>
+            orders.map((order) => {
+                if (order.id === orderId) {
+                    isUpdated = true;
+                    return { ...order, status };
+                }
+                return order;
+            })
+        );
+        return isUpdated;
     }
 
     /**

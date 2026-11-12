@@ -25,6 +25,15 @@ export class OrderHistoryComponent {
   // Đơn hàng đang được chọn để xem trong Modal chi tiết
   selectedOrder = signal<Order | null>(null);
 
+  // Danh sách các trạng thái dùng cho select giả lập
+  readonly allStatuses: OrderStatus[] = [
+    'pending',
+    'confirmed',
+    'shipped',
+    'delivered',
+    'cancelled',
+  ];
+
   // Lọc danh sách đơn hàng thuộc về user đang đăng nhập
   readonly myOrders = computed(() => {
     const user = this.authService.currentUser();
@@ -70,6 +79,21 @@ export class OrderHistoryComponent {
   // Đóng modal xem chi tiết
   closeOrderDetail(): void {
     this.selectedOrder.set(null);
+  }
+
+  // Cập nhật trạng thái đơn hàng (Dành cho Demo / Dev test các Tab)
+  onStatusChange(order: Order, newStatus: OrderStatus): void {
+    const success = this.orderService.updateOrderStatus(order.id, newStatus);
+    if (success) {
+      this.toastService.success(
+        `Đã đổi trạng thái đơn #${order.id} sang "${this.getStatusLabel(newStatus)}"`
+      );
+      if (this.selectedOrder()?.id === order.id) {
+        this.selectedOrder.update((curr) =>
+          curr ? { ...curr, status: newStatus } : null
+        );
+      }
+    }
   }
 
   // Hủy đơn hàng (khi đang ở pending)

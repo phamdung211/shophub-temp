@@ -264,6 +264,27 @@
           </div>
         </div>
 
+        <!-- Công cụ Giả lập cập nhật trạng thái đơn hàng (Dành cho Demo / Test) -->
+        <div class="p-3.5 bg-amber-50/70 border border-amber-200 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-2 text-amber-900 font-medium">
+            <span class="text-base">🛠️</span>
+            <span><strong>Chuyển nhanh trạng thái</strong> (Dành cho Demo / Test các Tab):</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <select
+              [value]="detailOrder.status"
+              (change)="onStatusChange(detailOrder, $any($event.target).value)"
+              class="px-3 py-1.5 bg-white border border-amber-300 rounded-lg font-semibold text-gray-800 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none cursor-pointer shadow-sm"
+            >
+              @for (st of allStatuses; track st) {
+                <option [value]="st">
+                  {{ getStatusIcon(st) }} {{ getStatusLabel(st) }}
+                </option>
+              }
+            </select>
+          </div>
+        </div>
+
         <!-- Thông tin giao hàng & người nhận -->
         <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 space-y-2 text-sm">
           <h3 class="font-bold text-gray-800 text-xs uppercase tracking-wider mb-2">
