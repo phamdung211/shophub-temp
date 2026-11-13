@@ -1,37 +1,112 @@
-<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-  <!-- Search Input with RxJS Live Search -->
-  <div class="relative flex-1 max-w-md">
-    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400">
-      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-      </svg>
+<!-- Search Input with RxJS Live Search -->
+<div class="mb-6 space-y-4">
+  <!-- HÀNG 1: Tìm kiếm + Chọn Danh mục + Nút mở bộ lọc trên Mobile -->
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <!-- 1. Ô tìm kiếm (giữ nguyên của bạn) -->
+    <div class="relative flex-1 max-w-md">
+      <div class="relative flex-1 max-w-md">
+        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+
+        <input type="text" [formControl]="searchControl" placeholder="Tìm kiếm theo tên, mô tả hoặc thương hiệu..."
+          class="w-full rounded-xl border border-gray-300 bg-white py-2.5 pl-10 pr-10 text-sm text-gray-900 placeholder-gray-400 shadow-sm transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100" />
+
+        @if (searchControl.value) {
+        <button type="button" (click)="clearSearch()"
+          class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition"
+          title="Xóa tìm kiếm">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        }
+      </div>
     </div>
 
-    <input type="text" [formControl]="searchControl" placeholder="Tìm kiếm theo tên, mô tả hoặc thương hiệu..."
-      class="w-full rounded-xl border border-gray-300 bg-white py-2.5 pl-10 pr-10 text-sm text-gray-900 placeholder-gray-400 shadow-sm transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100" />
+    <div class="flex items-center gap-2">
+      <!-- 2. Dropdown Ngành hàng -->
+      <div class="flex items-center gap-2">
+        <label for="category-select" class="text-xs font-semibold text-gray-600 dark:text-gray-300">Ngành
+          hàng:</label>
+        <select id="category-select" [(ngModel)]="selectedCategory" (ngModelChange)="onCategoryChange()"
+          class="rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-2 text-xs font-medium shadow-sm">
+          @for (cat of categories; track cat.value) {
+          <option [value]="cat.value">{{ cat.label }}</option>
+          }
+        </select>
+      </div>
 
-    @if (searchControl.value) {
-    <button type="button" (click)="clearSearch()"
-      class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition"
-      title="Xóa tìm kiếm">
-      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-      </svg>
-    </button>
-    }
+      <!-- 3. Nút Toggle Bộ lọc trên Mobile (md:hidden) -->
+      <button type="button" (click)="isMobileFilterOpen = !isMobileFilterOpen"
+        class="md:hidden flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-xs font-medium text-gray-700 dark:text-gray-200">
+        <span>⚙️</span>
+        <span>Bộ lọc</span>
+      </button>
+    </div>
   </div>
 
-  <!-- Category Dropdown -->
-  <div class="flex items-center gap-2">
-    <label for="category-select" class="text-sm font-medium text-gray-700 whitespace-nowrap">
-      Ngành hàng:
-    </label>
-    <select id="category-select" [(ngModel)]="selectedCategory" (ngModelChange)="onCategoryChange()"
-      class="rounded-xl border border-gray-300 bg-white px-3.5 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 cursor-pointer">
-      @for (cat of categories; track cat.value) {
-      <option [value]="cat.value">{{ cat.label }}</option>
-      }
-    </select>
+  <!-- HÀNG 2: BỘ LỌC NÂNG CAO (Giá + Đánh giá + Sắp xếp + Reset) -->
+  <!-- Trên Desktop luôn hiện; Trên Mobile chỉ hiện khi isMobileFilterOpen = true -->
+  <div [class.hidden]="!isMobileFilterOpen"
+    class="md:flex flex-wrap items-center justify-between gap-4 p-4 bg-gray-50 dark:bg-gray-800/60 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 transition-all">
+
+    <!-- Thanh trượt khoảng giá -->
+    <div class="w-full sm:w-48 space-y-1">
+      <div class="flex justify-between text-xs font-semibold text-gray-700 dark:text-gray-300">
+        <span>Khoảng giá:</span>
+        <span class="text-blue-600 dark:text-blue-400 font-bold">
+          {{ maxPrice >= 2000 ? '$2000+ (Tất cả)' : ('$' + maxPrice) }}
+        </span>
+      </div>
+      <input type="range" min="0" max="2000" step="20" [(ngModel)]="maxPrice" (input)="emitFilterChange()"
+        class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-600" />
+      <div class="flex justify-between text-[10px] text-gray-400">
+        <span>$0</span>
+        <span>$2000+</span>
+      </div>
+    </div>
+
+    <!-- Đánh giá sao -->
+    <div class="flex items-center gap-1.5">
+      <span class="text-xs font-semibold text-gray-700 dark:text-gray-300">Đánh giá:</span>
+      <button type="button" (click)="minRating = 0; emitFilterChange()" [class.bg-blue-600]="minRating === 0"
+        [class.text-white]="minRating === 0"
+        class="px-2.5 py-1 text-xs rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+        Tất cả
+      </button>
+      <button type="button" (click)="minRating = 4; emitFilterChange()" [class.bg-blue-600]="minRating === 4"
+        [class.text-white]="minRating === 4"
+        class="px-2.5 py-1 text-xs rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+        ⭐ ≥ 4.0
+      </button>
+      <button type="button" (click)="minRating = 4.5; emitFilterChange()" [class.bg-blue-600]="minRating === 4.5"
+        [class.text-white]="minRating === 4.5"
+        class="px-2.5 py-1 text-xs rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+        ⭐ ≥ 4.5
+      </button>
+    </div>
+
+    <!-- Sắp xếp -->
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-semibold text-gray-700 dark:text-gray-300">Sắp xếp:</span>
+      <select [(ngModel)]="sortBy" (change)="emitFilterChange()"
+        class="text-xs rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 py-1.5 px-2.5 focus:ring-1 focus:ring-blue-500">
+        <option value="default">Mặc định</option>
+        <option value="price-asc">Giá: Thấp đến Cao</option>
+        <option value="price-desc">Giá: Cao đến Thấp</option>
+        <option value="name-asc">Tên: A → Z</option>
+        <option value="rating-desc">Đánh giá cao nhất</option>
+      </select>
+    </div>
+
+    <!-- Nút Đặt lại bộ lọc -->
+    <button type="button" (click)="resetFilters()"
+      class="text-xs text-red-500 hover:text-red-700 dark:hover:text-red-400 font-semibold underline cursor-pointer">
+      Đặt lại bộ lọc
+    </button>
   </div>
 </div>

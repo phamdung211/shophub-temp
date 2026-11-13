@@ -3,6 +3,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { CartService } from '../../../core/services/cart.service';
 import { CurrencyService } from '../../../core/services/currency.service';
+import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
   selector: 'app-header',
@@ -14,6 +15,7 @@ import { CurrencyService } from '../../../core/services/currency.service';
 export class HeaderComponent {
   authService = inject(AuthService);
   cartService = inject(CartService);
+  readonly themeService = inject(ThemeService);
   private router = inject(Router);
   private elementRef = inject(ElementRef);
   currencyService = inject(CurrencyService);

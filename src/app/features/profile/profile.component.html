@@ -1,84 +1,84 @@
-<div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 py-8 px-4 sm:px-6 lg:px-8 transition-colors">
   <div class="max-w-6xl mx-auto">
     <!-- Breadcrumb -->
-    <nav class="flex items-center gap-2 text-sm text-gray-500 mb-6">
-      <a routerLink="/products" class="hover:text-blue-600 transition flex items-center gap-1">
+    <nav class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
+      <a routerLink="/products" class="hover:text-blue-600 dark:hover:text-blue-400 transition flex items-center gap-1">
         <span>🏠</span> Trang chủ
       </a>
       <span>/</span>
-      <span class="text-gray-800 font-medium">Hồ sơ cá nhân</span>
+      <span class="text-gray-800 dark:text-gray-200 font-medium">Hồ sơ cá nhân</span>
     </nav>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
       <!-- Cột trái: Tóm tắt thông tin & Menu điều hướng nhanh -->
       <aside class="lg:col-span-4 space-y-6">
         <!-- Card thông tin user -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 text-center">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 text-center transition-colors">
           <div class="relative inline-block mb-4">
             <img
               [src]="avatarPreview"
               [alt]="profileForm.get('username')?.value || 'User avatar'"
-              class="w-28 h-28 rounded-full object-cover border-4 border-blue-100 shadow-md mx-auto"
+              class="w-28 h-28 rounded-full object-cover border-4 border-blue-100 dark:border-blue-900 shadow-md mx-auto"
               (error)="$any($event.target).src = 'https://dummyjson.com/icon/kminchelle/128'"
             />
             <span
-              class="absolute bottom-1 right-1 w-5 h-5 bg-emerald-500 border-2 border-white rounded-full"
+              class="absolute bottom-1 right-1 w-5 h-5 bg-emerald-500 border-2 border-white dark:border-gray-900 rounded-full"
               title="Đang hoạt động"
             ></span>
           </div>
 
-          <h2 class="text-xl font-bold text-gray-800">
+          <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100">
             {{ profileForm.get('firstName')?.value }} {{ profileForm.get('lastName')?.value }}
           </h2>
-          <p class="text-sm text-blue-600 font-medium mt-0.5">
+          <p class="text-sm text-blue-600 dark:text-blue-400 font-medium mt-0.5">
             &#64;{{ profileForm.get('username')?.value }}
           </p>
-          <p class="text-xs text-gray-500 mt-1">
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
             {{ profileForm.get('email')?.value }}
           </p>
 
-          <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-center gap-2 text-xs text-gray-600">
-            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+          <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 flex items-center justify-center gap-2 text-xs text-gray-600 dark:text-gray-300">
+            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900/60">
               ⭐ Thành viên ShopHub
             </span>
-            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900/60">
               ✓ Đã xác thực
             </span>
           </div>
         </div>
 
         <!-- Menu điều hướng tài khoản -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-          <div class="p-4 bg-gray-50 border-b border-gray-200">
-            <h3 class="font-bold text-gray-800 text-sm uppercase tracking-wide">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden transition-colors">
+          <div class="p-4 bg-gray-50 dark:bg-gray-800/80 border-b border-gray-200 dark:border-gray-800">
+            <h3 class="font-bold text-gray-800 dark:text-gray-200 text-sm uppercase tracking-wide">
               Quản lý tài khoản
             </h3>
           </div>
-          <div class="divide-y divide-gray-100">
+          <div class="divide-y divide-gray-100 dark:divide-gray-800">
             <a
               routerLink="/profile"
-              class="flex items-center gap-3 px-5 py-3.5 text-sm font-semibold text-blue-600 bg-blue-50/60 border-l-4 border-blue-600 transition"
+              class="flex items-center gap-3 px-5 py-3.5 text-sm font-semibold text-blue-600 dark:text-blue-400 bg-blue-50/60 dark:bg-blue-950/40 border-l-4 border-blue-600 transition"
             >
               <span class="text-lg">👤</span>
               <span>Hồ sơ của tôi</span>
             </a>
             <a
               routerLink="/orders"
-              class="flex items-center gap-3 px-5 py-3.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition"
+              class="flex items-center gap-3 px-5 py-3.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/60 hover:text-blue-600 dark:hover:text-blue-400 transition"
             >
               <span class="text-lg">📦</span>
               <span>Đơn mua của tôi</span>
             </a>
             <a
               routerLink="/cart"
-              class="flex items-center gap-3 px-5 py-3.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition"
+              class="flex items-center gap-3 px-5 py-3.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/60 hover:text-blue-600 dark:hover:text-blue-400 transition"
             >
               <span class="text-lg">🛒</span>
               <span>Giỏ hàng hiện tại</span>
             </a>
             <button
               (click)="authService.logout()"
-              class="w-full flex items-center gap-3 px-5 py-3.5 text-sm font-medium text-red-600 hover:bg-red-50 transition text-left"
+              class="w-full flex items-center gap-3 px-5 py-3.5 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/60 transition text-left"
             >
               <span class="text-lg">🚪</span>
               <span>Đăng xuất</span>
@@ -89,10 +89,10 @@
 
       <!-- Cột phải: Form cập nhật thông tin -->
       <main class="lg:col-span-8">
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8">
-          <div class="border-b border-gray-200 pb-5 mb-6">
-            <h1 class="text-2xl font-bold text-gray-900">Hồ sơ cá nhân</h1>
-            <p class="text-sm text-gray-500 mt-1">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 sm:p-8 transition-colors">
+          <div class="border-b border-gray-200 dark:border-gray-800 pb-5 mb-6">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Hồ sơ cá nhân</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
               Quản lý thông tin hồ sơ để bảo mật tài khoản và cập nhật địa chỉ liên hệ.
             </p>
           </div>
@@ -101,7 +101,7 @@
             <!-- Hàng 1: Họ và Tên -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label for="firstName" class="block text-sm font-semibold text-gray-700 mb-1.5">
+                <label for="firstName" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
                   Họ & Tên đệm <span class="text-red-500">*</span>
                 </label>
                 <input
@@ -109,18 +109,18 @@
                   type="text"
                   formControlName="firstName"
                   placeholder="Ví dụ: Nguyễn"
-                  class="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm"
+                  class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm"
                   [class.border-red-500]="hasError('firstName')"
                 />
                 @if (hasError('firstName', 'required')) {
-                  <p class="text-red-500 text-xs mt-1">Vui lòng nhập Họ của bạn.</p>
+                  <p class="text-red-500 dark:text-red-400 text-xs mt-1">Vui lòng nhập Họ của bạn.</p>
                 } @else if (hasError('firstName', 'minlength')) {
-                  <p class="text-red-500 text-xs mt-1">Họ phải có ít nhất 2 ký tự.</p>
+                  <p class="text-red-500 dark:text-red-400 text-xs mt-1">Họ phải có ít nhất 2 ký tự.</p>
                 }
               </div>
 
               <div>
-                <label for="lastName" class="block text-sm font-semibold text-gray-700 mb-1.5">
+                <label for="lastName" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
                   Tên <span class="text-red-500">*</span>
                 </label>
                 <input
@@ -128,13 +128,13 @@
                   type="text"
                   formControlName="lastName"
                   placeholder="Ví dụ: Văn A"
-                  class="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm"
+                  class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm"
                   [class.border-red-500]="hasError('lastName')"
                 />
                 @if (hasError('lastName', 'required')) {
-                  <p class="text-red-500 text-xs mt-1">Vui lòng nhập Tên của bạn.</p>
+                  <p class="text-red-500 dark:text-red-400 text-xs mt-1">Vui lòng nhập Tên của bạn.</p>
                 } @else if (hasError('lastName', 'minlength')) {
-                  <p class="text-red-500 text-xs mt-1">Tên phải có ít nhất 2 ký tự.</p>
+                  <p class="text-red-500 dark:text-red-400 text-xs mt-1">Tên phải có ít nhất 2 ký tự.</p>
                 }
               </div>
             </div>
@@ -142,7 +142,7 @@
             <!-- Hàng 2: Username & Số điện thoại -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label for="username" class="block text-sm font-semibold text-gray-700 mb-1.5">
+                <label for="username" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
                   Tên đăng nhập (Username) <span class="text-red-500">*</span>
                 </label>
                 <input
@@ -150,18 +150,18 @@
                   type="text"
                   formControlName="username"
                   placeholder="username"
-                  class="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm"
+                  class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm"
                   [class.border-red-500]="hasError('username')"
                 />
                 @if (hasError('username', 'required')) {
-                  <p class="text-red-500 text-xs mt-1">Vui lòng nhập Username.</p>
+                  <p class="text-red-500 dark:text-red-400 text-xs mt-1">Vui lòng nhập Username.</p>
                 } @else if (hasError('username', 'minlength')) {
-                  <p class="text-red-500 text-xs mt-1">Username phải có ít nhất 3 ký tự.</p>
+                  <p class="text-red-500 dark:text-red-400 text-xs mt-1">Username phải có ít nhất 3 ký tự.</p>
                 }
               </div>
 
               <div>
-                <label for="phone" class="block text-sm font-semibold text-gray-700 mb-1.5">
+                <label for="phone" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
                   Số điện thoại
                 </label>
                 <input
@@ -169,18 +169,18 @@
                   type="tel"
                   formControlName="phone"
                   placeholder="Ví dụ: 0912345678"
-                  class="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm"
+                  class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm"
                   [class.border-red-500]="hasError('phone')"
                 />
                 @if (hasError('phone', 'pattern')) {
-                  <p class="text-red-500 text-xs mt-1">Số điện thoại không đúng định dạng VN (10 số, bắt đầu 03/05/07/08/09).</p>
+                  <p class="text-red-500 dark:text-red-400 text-xs mt-1">Số điện thoại không đúng định dạng VN (10 số, bắt đầu 03/05/07/08/09).</p>
                 }
               </div>
             </div>
 
             <!-- Hàng 3: Email -->
             <div>
-              <label for="email" class="block text-sm font-semibold text-gray-700 mb-1.5">
+              <label for="email" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
                 Địa chỉ Email <span class="text-red-500">*</span>
               </label>
               <input
@@ -188,19 +188,19 @@
                 type="email"
                 formControlName="email"
                 placeholder="name@example.com"
-                class="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm"
+                class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm"
                 [class.border-red-500]="hasError('email')"
               />
               @if (hasError('email', 'required')) {
-                <p class="text-red-500 text-xs mt-1">Vui lòng nhập địa chỉ Email.</p>
+                <p class="text-red-500 dark:text-red-400 text-xs mt-1">Vui lòng nhập địa chỉ Email.</p>
               } @else if (hasError('email', 'email')) {
-                <p class="text-red-500 text-xs mt-1">Địa chỉ Email không đúng định dạng.</p>
+                <p class="text-red-500 dark:text-red-400 text-xs mt-1">Địa chỉ Email không đúng định dạng.</p>
               }
             </div>
 
             <!-- Hàng 4: Link ảnh đại diện (Avatar URL) -->
             <div>
-              <label for="image" class="block text-sm font-semibold text-gray-700 mb-1.5">
+              <label for="image" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
                 Đường dẫn ảnh đại diện (Avatar URL)
               </label>
               <input
@@ -208,20 +208,20 @@
                 type="url"
                 formControlName="image"
                 placeholder="https://example.com/avatar.jpg"
-                class="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm"
+                class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm"
               />
-              <p class="text-xs text-gray-500 mt-1.5">
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1.5">
                 Hỗ trợ ảnh định dạng JPG, PNG hoặc đường dẫn CDN trực tuyến.
               </p>
             </div>
 
             <!-- Action Buttons -->
-            <div class="pt-6 border-t border-gray-200 flex flex-wrap items-center justify-end gap-3">
+            <div class="pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-wrap items-center justify-end gap-3">
               <button
                 type="button"
                 (click)="onReset()"
                 [disabled]="profileForm.pristine || isSaving"
-                class="px-5 py-2.5 rounded-xl border border-gray-300 text-gray-700 text-sm font-semibold hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                class="px-5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Khôi phục
               </button>
@@ -245,4 +245,3 @@
     </div>
   </div>
 </div>
-

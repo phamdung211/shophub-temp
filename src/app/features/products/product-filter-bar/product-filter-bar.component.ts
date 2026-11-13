@@ -12,6 +12,14 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProductService } from '../../../core/services/product.service';
 
+export interface FilterCriteria {
+  keyword: string;
+  category: string;
+  maxPrice: number;    // Giới hạn giá tối đa từ slider ($0 -> maxPrice)
+  minRating: number;   // 0 (tất cả), 4.0, 4.5
+  sortBy: 'default' | 'price-asc' | 'price-desc' | 'name-asc' | 'rating-desc';
+}
+
 @Component({
   selector: 'app-product-filter-bar',
   standalone: true,
@@ -26,12 +34,19 @@ export class ProductFilterBarComponent implements OnInit {
   // FormControl quản lý ô tìm kiếm
   searchControl = new FormControl('', { nonNullable: true });
 
-  // Danh mục được chọn
+  // Quản lý giá trị lọc
   // selectedCategory = 'all';
+  maxPrice = 2000;         // Giá trị mặc định của slider ($2000)
+  minRating = 0;           // 0: Tất cả, 4: >=4★, 4.5: >=4.5★
+  sortBy: FilterCriteria['sortBy'] = 'default';
+
+  // Quản lý responsive trên Mobile
+  isMobileFilterOpen = false;
 
   // Sự kiện gửi lên Smart Component (ProductCatalogComponent)
   @Output() searchChange = new EventEmitter<string>();
   @Output() categoryChange = new EventEmitter<string>();
+  @Output() filterChange = new EventEmitter<FilterCriteria>();
 
   @Input() selectedCategory = 'all';
 
@@ -83,9 +98,35 @@ export class ProductFilterBarComponent implements OnInit {
 
   onCategoryChange(): void {
     this.categoryChange.emit(this.selectedCategory);
+    // this.emitFilterChange();
   }
 
   clearSearch(): void {
     this.searchControl.setValue('');
+  }
+
+  emitFilterChange(): void {
+    this.filterChange.emit({
+      keyword: this.searchControl.value.trim(),
+      category: this.selectedCategory,
+      maxPrice: this.maxPrice,
+      minRating: this.minRating,
+      sortBy: this.sortBy,
+    });
+  }
+
+  resetFilters(): void {
+
+    this.searchControl.setValue('');
+
+    // this.selectedCategory = 'all';
+
+    this.maxPrice = 2000;
+
+    this.minRating = 0;
+
+    this.sortBy = 'default';
+
+    this.emitFilterChange();
   }
 }

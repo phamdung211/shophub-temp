@@ -1,22 +1,22 @@
-<div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 py-8 px-4 sm:px-6 lg:px-8 transition-colors">
   <div class="max-w-6xl mx-auto">
     <!-- Breadcrumb -->
-    <nav class="flex items-center gap-2 text-sm text-gray-500 mb-6">
-      <a routerLink="/products" class="hover:text-blue-600 transition flex items-center gap-1">
+    <nav class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
+      <a routerLink="/products" class="hover:text-blue-600 dark:hover:text-blue-400 transition flex items-center gap-1">
         <span>🏠</span> Trang chủ
       </a>
       <span>/</span>
-      <span class="text-gray-800 font-medium">Đơn mua của tôi</span>
+      <span class="text-gray-800 dark:text-gray-200 font-medium">Đơn mua của tôi</span>
     </nav>
 
     <!-- Header Trang -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
       <div>
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-2">
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
           <span>📦</span>
           <span>Đơn mua của tôi</span>
         </h1>
-        <p class="text-sm text-gray-500 mt-1">
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
           Theo dõi hành trình vận chuyển và xem lại chi tiết lịch sử mua sắm của bạn.
         </p>
       </div>
@@ -29,15 +29,15 @@
     </div>
 
     <!-- Tabs Lọc Trạng Thái -->
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-2 mb-6 overflow-x-auto">
+    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-2 mb-6 overflow-x-auto transition-colors">
       <div class="flex items-center gap-2 min-w-max">
         <button type="button" (click)="setStatusFilter('all')"
           class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition" [class]="selectedStatus() === 'all'
             ? 'bg-blue-600 text-white shadow-sm'
-            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'">
+            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100'">
           <span>Tất cả</span>
           <span class="px-2 py-0.5 rounded-full text-xs font-bold"
-            [class]="selectedStatus() === 'all' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700'">
+            [class]="selectedStatus() === 'all' ? 'bg-blue-500 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'">
             {{ statusCounts().all }}
           </span>
         </button>
@@ -45,10 +45,10 @@
         <button type="button" (click)="setStatusFilter('pending')"
           class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition" [class]="selectedStatus() === 'pending'
             ? 'bg-amber-500 text-white shadow-sm'
-            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'">
+            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100'">
           <span>⏳ Chờ xử lý</span>
           <span class="px-2 py-0.5 rounded-full text-xs font-bold"
-            [class]="selectedStatus() === 'pending' ? 'bg-amber-600 text-white' : 'bg-amber-50 text-amber-700'">
+            [class]="selectedStatus() === 'pending' ? 'bg-amber-600 text-white' : 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300'">
             {{ statusCounts().pending }}
           </span>
         </button>
@@ -56,10 +56,10 @@
         <button type="button" (click)="setStatusFilter('confirmed')"
           class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition" [class]="selectedStatus() === 'confirmed'
             ? 'bg-blue-600 text-white shadow-sm'
-            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'">
+            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100'">
           <span>📋 Đã xác nhận</span>
           <span class="px-2 py-0.5 rounded-full text-xs font-bold"
-            [class]="selectedStatus() === 'confirmed' ? 'bg-blue-700 text-white' : 'bg-blue-50 text-blue-700'">
+            [class]="selectedStatus() === 'confirmed' ? 'bg-blue-700 text-white' : 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300'">
             {{ statusCounts().confirmed }}
           </span>
         </button>
@@ -67,10 +67,10 @@
         <button type="button" (click)="setStatusFilter('shipped')"
           class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition" [class]="selectedStatus() === 'shipped'
             ? 'bg-purple-600 text-white shadow-sm'
-            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'">
+            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100'">
           <span>🚚 Đang giao</span>
           <span class="px-2 py-0.5 rounded-full text-xs font-bold"
-            [class]="selectedStatus() === 'shipped' ? 'bg-purple-700 text-white' : 'bg-purple-50 text-purple-700'">
+            [class]="selectedStatus() === 'shipped' ? 'bg-purple-700 text-white' : 'bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300'">
             {{ statusCounts().shipped }}
           </span>
         </button>
@@ -78,10 +78,10 @@
         <button type="button" (click)="setStatusFilter('delivered')"
           class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition" [class]="selectedStatus() === 'delivered'
             ? 'bg-emerald-600 text-white shadow-sm'
-            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'">
+            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100'">
           <span>✅ Hoàn thành</span>
           <span class="px-2 py-0.5 rounded-full text-xs font-bold"
-            [class]="selectedStatus() === 'delivered' ? 'bg-emerald-700 text-white' : 'bg-emerald-50 text-emerald-700'">
+            [class]="selectedStatus() === 'delivered' ? 'bg-emerald-700 text-white' : 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300'">
             {{ statusCounts().delivered }}
           </span>
         </button>
@@ -89,10 +89,10 @@
         <button type="button" (click)="setStatusFilter('cancelled')"
           class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition" [class]="selectedStatus() === 'cancelled'
             ? 'bg-gray-700 text-white shadow-sm'
-            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'">
+            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100'">
           <span>❌ Đã hủy</span>
           <span class="px-2 py-0.5 rounded-full text-xs font-bold"
-            [class]="selectedStatus() === 'cancelled' ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-700'">
+            [class]="selectedStatus() === 'cancelled' ? 'bg-gray-800 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'">
             {{ statusCounts().cancelled }}
           </span>
         </button>
@@ -103,15 +103,15 @@
     <div class="space-y-4">
       @for (order of displayedOrders(); track order.id) {
       <div
-        class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:border-blue-300 transition-all">
+        class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden hover:border-blue-300 dark:hover:border-blue-700 transition-all">
         <!-- Top Bar Thẻ Đơn Hàng -->
         <div
-          class="bg-gray-50/80 px-6 py-3.5 border-b border-gray-200 flex flex-wrap items-center justify-between gap-3">
+          class="bg-gray-50/80 dark:bg-gray-800/80 px-6 py-3.5 border-b border-gray-200 dark:border-gray-800 flex flex-wrap items-center justify-between gap-3">
           <div class="flex items-center gap-3">
-            <span class="font-bold text-gray-800 text-sm sm:text-base">
+            <span class="font-bold text-gray-800 dark:text-gray-100 text-sm sm:text-base">
               Mã đơn: #{{ order.id }}
             </span>
-            <span class="text-xs text-gray-500">
+            <span class="text-xs text-gray-500 dark:text-gray-400">
               • Đặt lúc: {{ order.createdAt | date:'dd/MM/yyyy HH:mm' }}
             </span>
           </div>
@@ -123,27 +123,27 @@
               <span>{{ getStatusLabel(order.status) }}</span>
             </span>
 
-            <span class="text-xs px-2.5 py-1 rounded-full bg-gray-100 text-gray-600 border border-gray-200 font-medium">
+            <span class="text-xs px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 font-medium">
               {{ order.paymentMethod === 'cod' ? 'Thanh toán COD' : 'Chuyển khoản' }}
             </span>
           </div>
         </div>
 
         <!-- Danh sách sản phẩm tóm tắt -->
-        <div class="p-6 divide-y divide-gray-100">
+        <div class="p-6 divide-y divide-gray-100 dark:divide-gray-800">
           @for (item of order.items; track item.product.id) {
           <div class="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
             <div class="flex items-center gap-4 min-w-0">
               <img [src]="item.product.thumbnail || (item.product.images && item.product.images[0])"
                 [alt]="item.product.title"
-                class="w-14 h-14 rounded-xl object-cover border border-gray-200 flex-shrink-0"
+                class="w-14 h-14 rounded-xl object-cover border border-gray-200 dark:border-gray-700 flex-shrink-0 bg-gray-100 dark:bg-gray-800"
                 (error)="$any($event.target).src = 'https://dummyjson.com/image/150'" />
               <div class="min-w-0">
-                <h3 class="text-sm font-semibold text-gray-800 truncate" [title]="item.product.title">
+                <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-100 truncate" [title]="item.product.title">
                   {{ item.product.title }}
                 </h3>
-                <p class="text-xs text-gray-500 mt-0.5">
-                  Số lượng: <span class="font-semibold text-gray-700">x{{ item.quantity }}</span>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                  Số lượng: <span class="font-semibold text-gray-700 dark:text-gray-300">x{{ item.quantity }}</span>
                   @if (item.product.brand) {
                   <span> • Thương hiệu: {{ item.product.brand }}</span>
                   }
@@ -152,10 +152,10 @@
             </div>
 
             <div class="text-right flex-shrink-0">
-              <p class="text-sm font-bold text-gray-900">
+              <p class="text-sm font-bold text-gray-900 dark:text-gray-100">
                 {{ (item.product.price * item.quantity) | vndCurrency }}
               </p>
-              <p class="text-xs text-gray-400">
+              <p class="text-xs text-gray-400 dark:text-gray-500">
                 {{ item.product.price | vndCurrency }} / món
               </p>
             </div>
@@ -164,13 +164,13 @@
         </div>
 
         <!-- Bottom Bar Thẻ Đơn Hàng: Tổng tiền & Nút thao tác -->
-        <div class="bg-gray-50/50 px-6 py-4 border-t border-gray-200 flex flex-wrap items-center justify-between gap-4">
+        <div class="bg-gray-50/50 dark:bg-gray-800/50 px-6 py-4 border-t border-gray-200 dark:border-gray-800 flex flex-wrap items-center justify-between gap-4">
           <div class="flex items-baseline gap-2">
-            <span class="text-xs text-gray-500">Tổng thanh toán:</span>
-            <span class="text-lg font-bold text-blue-600">
+            <span class="text-xs text-gray-500 dark:text-gray-400">Tổng thanh toán:</span>
+            <span class="text-lg font-bold text-blue-600 dark:text-blue-400">
               {{ order.totalAmount | vndCurrency }}
             </span>
-            <span class="text-xs text-gray-400">
+            <span class="text-xs text-gray-400 dark:text-gray-500">
               ({{ order.items.length }} loại sản phẩm)
             </span>
           </div>
@@ -178,13 +178,13 @@
           <div class="flex items-center gap-2">
             @if (order.status === 'pending') {
             <button type="button" (click)="cancelOrder(order, $event)"
-              class="px-3.5 py-1.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition">
+              class="px-3.5 py-1.5 text-xs font-semibold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/60 hover:bg-red-100 dark:hover:bg-red-900/60 border border-red-200 dark:border-red-900/60 rounded-lg transition">
               Hủy đơn hàng
             </button>
             }
 
             <button type="button" (click)="openOrderDetail(order)"
-              class="px-4 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition flex items-center gap-1">
+              class="px-4 py-1.5 text-xs font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900/60 border border-blue-200 dark:border-blue-900/60 rounded-lg transition flex items-center gap-1">
               <span>🔍</span>
               <span>Xem chi tiết</span>
             </button>
@@ -193,14 +193,14 @@
       </div>
       } @empty {
       <!-- Empty State Thân Thiện -->
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-12 text-center">
-        <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center text-4xl mx-auto mb-4">
+      <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-12 text-center transition-colors">
+        <div class="w-20 h-20 bg-blue-50 dark:bg-gray-800 rounded-full flex items-center justify-center text-4xl mx-auto mb-4">
           🛒
         </div>
-        <h3 class="text-lg font-bold text-gray-800 mb-1">
+        <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-1">
           Không tìm thấy đơn hàng nào!
         </h3>
-        <p class="text-sm text-gray-500 max-w-md mx-auto mb-6">
+        <p class="text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto mb-6">
           @if (selectedStatus() === 'all') {
           Bạn chưa có đơn hàng nào trong lịch sử. Hãy dạo quanh một vòng và chọn những món đồ ưng ý nhé!
           } @else {
@@ -219,24 +219,24 @@
 
   <!-- MODAL XEM CHI TIẾT ĐƠN HÀNG -->
   @if (selectedOrder(); as detailOrder) {
-  <div class="fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+  <div class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
     (click)="closeOrderDetail()">
-    <div class="bg-white rounded-2xl shadow-xl border border-gray-200 max-w-2xl w-full overflow-hidden my-8"
+    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 max-w-2xl w-full overflow-hidden my-8 transition-colors"
       (click)="$event.stopPropagation()">
       <!-- Modal Header -->
-      <div class="px-6 py-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+      <div class="px-6 py-4 bg-gray-50 dark:bg-gray-800/80 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
         <div>
-          <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+          <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
             <span>🧾</span>
             <span>Chi tiết đơn hàng #{{ detailOrder.id }}</span>
           </h2>
-          <p class="text-xs text-gray-500 mt-0.5">
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
             Ngày đặt: {{ detailOrder.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}
           </p>
         </div>
 
         <button type="button" (click)="closeOrderDetail()"
-          class="text-gray-400 hover:text-gray-600 rounded-lg p-1.5 transition text-lg">
+          class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg p-1.5 transition text-lg">
           ✕
         </button>
       </div>
@@ -265,8 +265,8 @@
         </div>
 
         <!-- Công cụ Giả lập cập nhật trạng thái đơn hàng (Dành cho Demo / Test) -->
-        <div class="p-3.5 bg-amber-50/70 border border-amber-200 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs">
-          <div class="flex items-center gap-2 text-amber-900 font-medium">
+        <div class="p-3.5 bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-2 text-amber-900 dark:text-amber-300 font-medium">
             <span class="text-base">🛠️</span>
             <span><strong>Chuyển nhanh trạng thái</strong> (Dành cho Demo / Test các Tab):</span>
           </div>
@@ -274,7 +274,7 @@
             <select
               [value]="detailOrder.status"
               (change)="onStatusChange(detailOrder, $any($event.target).value)"
-              class="px-3 py-1.5 bg-white border border-amber-300 rounded-lg font-semibold text-gray-800 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none cursor-pointer shadow-sm"
+              class="px-3 py-1.5 bg-white dark:bg-gray-800 border border-amber-300 dark:border-amber-700/60 rounded-lg font-semibold text-gray-800 dark:text-gray-100 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none cursor-pointer shadow-sm"
             >
               @for (st of allStatuses; track st) {
                 <option [value]="st">
@@ -286,35 +286,35 @@
         </div>
 
         <!-- Thông tin giao hàng & người nhận -->
-        <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 space-y-2 text-sm">
-          <h3 class="font-bold text-gray-800 text-xs uppercase tracking-wider mb-2">
+        <div class="bg-gray-50 dark:bg-gray-800/60 rounded-xl p-4 border border-gray-200 dark:border-gray-700 space-y-2 text-sm">
+          <h3 class="font-bold text-gray-800 dark:text-gray-200 text-xs uppercase tracking-wider mb-2">
             Thông tin nhận hàng
           </h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-gray-700">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-gray-700 dark:text-gray-300">
             <p>
-              <span class="text-gray-500 font-medium">Người nhận:</span>
-              <span class="font-semibold text-gray-900 ml-1">{{ detailOrder.customerName }}</span>
+              <span class="text-gray-500 dark:text-gray-400 font-medium">Người nhận:</span>
+              <span class="font-semibold text-gray-900 dark:text-gray-100 ml-1">{{ detailOrder.customerName }}</span>
             </p>
             <p>
-              <span class="text-gray-500 font-medium">Số điện thoại:</span>
-              <span class="font-semibold text-gray-900 ml-1">{{ detailOrder.customerPhone }}</span>
+              <span class="text-gray-500 dark:text-gray-400 font-medium">Số điện thoại:</span>
+              <span class="font-semibold text-gray-900 dark:text-gray-100 ml-1">{{ detailOrder.customerPhone }}</span>
             </p>
           </div>
-          <p class="text-gray-700">
-            <span class="text-gray-500 font-medium">Địa chỉ giao:</span>
-            <span class="font-medium text-gray-900 ml-1">{{ detailOrder.shippingAddress }}</span>
+          <p class="text-gray-700 dark:text-gray-300">
+            <span class="text-gray-500 dark:text-gray-400 font-medium">Địa chỉ giao:</span>
+            <span class="font-medium text-gray-900 dark:text-gray-100 ml-1">{{ detailOrder.shippingAddress }}</span>
           </p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-gray-700 pt-1">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-gray-700 dark:text-gray-300 pt-1">
             <p>
-              <span class="text-gray-500 font-medium">Thanh toán:</span>
-              <span class="font-semibold text-gray-900 ml-1">
+              <span class="text-gray-500 dark:text-gray-400 font-medium">Thanh toán:</span>
+              <span class="font-semibold text-gray-900 dark:text-gray-100 ml-1">
                 {{ detailOrder.paymentMethod === 'cod' ? 'Thanh toán khi nhận hàng (COD)' : 'Chuyển khoản ngân hàng' }}
               </span>
             </p>
             @if (detailOrder.note) {
             <p>
-              <span class="text-gray-500 font-medium">Ghi chú:</span>
-              <span class="italic text-gray-800 ml-1">{{ detailOrder.note }}</span>
+              <span class="text-gray-500 dark:text-gray-400 font-medium">Ghi chú:</span>
+              <span class="italic text-gray-800 dark:text-gray-200 ml-1">{{ detailOrder.note }}</span>
             </p>
             }
           </div>
@@ -322,29 +322,29 @@
 
         <!-- Danh sách sản phẩm chi tiết -->
         <div>
-          <h3 class="font-bold text-gray-800 text-xs uppercase tracking-wider mb-3">
+          <h3 class="font-bold text-gray-800 dark:text-gray-200 text-xs uppercase tracking-wider mb-3">
             Danh sách sản phẩm ({{ detailOrder.items.length }})
           </h3>
-          <div class="border border-gray-200 rounded-xl divide-y divide-gray-100 overflow-hidden">
+          <div class="border border-gray-200 dark:border-gray-700 rounded-xl divide-y divide-gray-100 dark:divide-gray-800 overflow-hidden">
             @for (item of detailOrder.items; track item.product.id) {
-            <div class="p-3.5 flex items-center justify-between gap-3">
+            <div class="p-3.5 flex items-center justify-between gap-3 bg-white dark:bg-gray-900">
               <div class="flex items-center gap-3 min-w-0">
                 <img [src]="item.product.thumbnail || (item.product.images && item.product.images[0])"
                   [alt]="item.product.title"
-                  class="w-12 h-12 rounded-lg object-cover border border-gray-200 flex-shrink-0"
+                  class="w-12 h-12 rounded-lg object-cover border border-gray-200 dark:border-gray-700 flex-shrink-0 bg-gray-100 dark:bg-gray-800"
                   (error)="$any($event.target).src = 'https://dummyjson.com/image/150'" />
                 <div class="min-w-0">
-                  <p class="text-sm font-semibold text-gray-800 truncate">
+                  <p class="text-sm font-semibold text-gray-800 dark:text-gray-100 truncate">
                     {{ item.product.title }}
                   </p>
-                  <p class="text-xs text-gray-500">
+                  <p class="text-xs text-gray-500 dark:text-gray-400">
                     {{ item.product.price | vndCurrency }} x {{ item.quantity }}
                   </p>
                 </div>
               </div>
 
               <div class="text-right flex-shrink-0">
-                <span class="text-sm font-bold text-gray-900">
+                <span class="text-sm font-bold text-gray-900 dark:text-gray-100">
                   {{ (item.product.price * item.quantity) | vndCurrency }}
                 </span>
               </div>
@@ -354,36 +354,36 @@
         </div>
 
         <!-- Tóm tắt thanh toán -->
-        <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 space-y-2 text-sm">
-          <div class="flex justify-between text-gray-600">
+        <div class="bg-gray-50 dark:bg-gray-800/60 rounded-xl p-4 border border-gray-200 dark:border-gray-700 space-y-2 text-sm">
+          <div class="flex justify-between text-gray-600 dark:text-gray-400">
             <span>Tạm tính tiền hàng:</span>
-            <span class="font-medium">{{ detailOrder.totalAmount | vndCurrency }}</span>
+            <span class="font-medium text-gray-900 dark:text-gray-200">{{ detailOrder.totalAmount | vndCurrency }}</span>
           </div>
-          <div class="flex justify-between text-gray-600">
+          <div class="flex justify-between text-gray-600 dark:text-gray-400">
             <span>Phí vận chuyển:</span>
-            <span class="font-medium text-emerald-600">Miễn phí (Free Ship)</span>
+            <span class="font-medium text-emerald-600 dark:text-emerald-400">Miễn phí (Free Ship)</span>
           </div>
           <div
-            class="pt-2 border-t border-gray-200 flex justify-between items-center text-base font-bold text-gray-900">
+            class="pt-2 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center text-base font-bold text-gray-900 dark:text-gray-100">
             <span>Tổng thanh toán:</span>
-            <span class="text-lg text-blue-600">{{ detailOrder.totalAmount | vndCurrency }}</span>
+            <span class="text-lg text-blue-600 dark:text-blue-400">{{ detailOrder.totalAmount | vndCurrency }}</span>
           </div>
         </div>
       </div>
 
       <!-- Modal Footer -->
-      <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+      <div class="px-6 py-4 bg-gray-50 dark:bg-gray-800/80 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between">
         <div>
           @if (detailOrder.status === 'pending') {
           <button type="button" (click)="cancelOrder(detailOrder)"
-            class="px-4 py-2 text-xs font-semibold text-red-600 hover:bg-red-50 border border-red-200 rounded-xl transition">
+            class="px-4 py-2 text-xs font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/60 border border-red-200 dark:border-red-900/60 rounded-xl transition">
             Hủy đơn hàng này
           </button>
           }
         </div>
 
         <button type="button" (click)="closeOrderDetail()"
-          class="px-5 py-2 text-sm font-semibold bg-gray-800 text-white rounded-xl hover:bg-gray-900 transition">
+          class="px-5 py-2 text-sm font-semibold bg-gray-800 dark:bg-gray-700 text-white rounded-xl hover:bg-gray-900 dark:hover:bg-gray-600 transition">
           Đóng
         </button>
       </div>

@@ -1,4 +1,5 @@
-<header class="bg-white shadow-sm sticky top-0 z-50">
+<header
+  class="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow-sm sticky top-0 z-50 transition-colors duration-200">
   <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
     <a routerLink="/products" class="text-2xl font-bold text-blue-600 flex items-center gap-2">
       <span>🛍️</span>
@@ -104,6 +105,20 @@
     : 'bg-emerald-50 text-emerald-700 border-emerald-200'" title="Nhấn để đổi giữa VND và USD">
         <span class="text-xl leading-none">💱</span>
         <span>{{ currencyService.currentCurrency() }}</span>
+      </button>
+
+      <!-- Nút chuyển đổi Dark / Light Theme -->
+      <button type="button" (click)="themeService.toggleTheme()"
+        class="flex items-center justify-center w-9 h-9 rounded-lg border transition-all duration-200 shadow-sm hover:scale-105"
+        [class]="themeService.isDarkMode() 
+    ? 'bg-gray-800 text-yellow-400 border-gray-700 hover:bg-gray-700' 
+    : 'bg-amber-50 text-amber-600 border-amber-200 hover:bg-amber-100'"
+        [title]="themeService.isDarkMode() ? 'Chuyển sang chế độ Sáng' : 'Chuyển sang chế độ Tối'">
+        @if (themeService.isDarkMode()) {
+        <span class="text-lg">☀️</span>
+        } @else {
+        <span class="text-lg">🌙</span>
+        }
       </button>
 
       <!-- <a routerLink="/admin/products/create"

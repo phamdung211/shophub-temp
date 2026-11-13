@@ -5,7 +5,7 @@ import { Product } from '../../../core/model/product.model';
 import { ProductService } from '../../../core/services/product.service';
 import { CartService } from '../../../core/services/cart.service';
 import { ProductCardComponent } from '../components/product-card/product-card.component';
-import { ProductFilterBarComponent } from '../product-filter-bar/product-filter-bar.component';
+import { FilterCriteria, ProductFilterBarComponent } from '../product-filter-bar/product-filter-bar.component';
 import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
@@ -21,6 +21,7 @@ export class ProductCatalogComponent implements OnInit {
   private toastService = inject(ToastService);
   private router = inject(Router);
   products: Product[] = [];
+  allLoadedProducts: Product[] = [];   // Danh sách gốc đầy đủ để làm dữ liệu lọc
   isLoading = false;
   errorMessage = '';
 
@@ -103,6 +104,7 @@ export class ProductCatalogComponent implements OnInit {
 
     request$.subscribe({
       next: (response) => {
+        this.allLoadedProducts = response.products;
         this.products = response.products;
         this.totalProducts = response.total;
         this.isLoading = false;
@@ -197,4 +199,36 @@ export class ProductCatalogComponent implements OnInit {
     this.currentPage = 1;
     this.loadProducts();
   }
+
+  onFilterChange(criteria: FilterCriteria): void {
+    //lọc kết hợp nhiều điều kiện từ mảng gốc allLoadedProducts
+    let filtered = this.allLoadedProducts.filter((item) => {
+      const matchCat = criteria.category === 'all' || item.category === criteria.category;
+      const matchPrice = criteria.maxPrice >= 2000 ? true : item.price <= criteria.maxPrice;
+      const matchRating = (item.rating ?? 0) >= criteria.minRating;
+      const matchKeyword =
+        !criteria.keyword ||
+        item.title.toLowerCase().includes(criteria.keyword.toLowerCase());
+      return matchCat && matchPrice && matchRating && matchKeyword;
+    });
+    //Sorting
+    switch (criteria.sortBy) {
+      case 'price-asc':
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-desc':
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case 'name-asc':
+        filtered.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case 'rating-desc':
+        filtered.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+        break;
+    }
+    //cập nhật kết quả hiển thị ra giao diện
+    this.products = filtered;
+    this.totalProducts = filtered.length;
+  }
+
 }
