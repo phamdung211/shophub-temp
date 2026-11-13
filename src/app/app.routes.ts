@@ -65,6 +65,22 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'profile',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/profile/profile.component').then(
+        (m) => m.ProfileComponent
+      ),
+  },
+  {
+    path: 'orders',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/orders/order-history.component').then(
+        (m) => m.OrderHistoryComponent
+      ),
+  },
+  {
     path: 'admin/products',
     canActivate: [authGuard],
     loadComponent: () =>

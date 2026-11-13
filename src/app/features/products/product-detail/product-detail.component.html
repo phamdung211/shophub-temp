@@ -1,7 +1,7 @@
 <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
   <!-- Breadcrumb -->
-  <nav class="mb-6 flex items-center gap-2 text-sm text-gray-500">
-    <a routerLink="/products" class="hover:text-blue-600 transition flex items-center gap-1">
+  <nav class="mb-6 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+    <a routerLink="/products" class="hover:text-blue-600 dark:hover:text-blue-400 transition flex items-center gap-1">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
       </svg>
@@ -9,45 +9,45 @@
     </a>
     @if (product) {
     <span>/</span>
-    <!-- <span class="capitalize text-gray-600">{{ product.category }}</span> -->
     <a routerLink="/products" [queryParams]="{ category: product.category }"
-      class="capitalize text-gray-600 hover:text-blue-600 transition hover:underline">
+      class="capitalize text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition hover:underline">
       {{ product.category }}
     </a>
     <span>/</span>
-    <span class="font-medium text-gray-900 truncate max-w-xs">{{ product.title }}</span>
+    <span class="font-medium text-gray-900 dark:text-gray-100 truncate max-w-xs">{{ product.title }}</span>
     }
   </nav>
 
   @if (isLoading) {
   <!-- Skeleton Loading khi đang fetch API chi tiết sản phẩm -->
   <div
-    class="grid grid-cols-1 gap-10 lg:grid-cols-2 bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100 animate-pulse">
-    <div class="aspect-square bg-gray-200 rounded-xl"></div>
+    class="grid grid-cols-1 gap-10 lg:grid-cols-2 bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100 dark:border-gray-800 animate-pulse">
+    <div class="aspect-square bg-gray-200 dark:bg-gray-800 rounded-xl"></div>
     <div class="flex flex-col justify-between py-2">
       <div>
-        <div class="h-6 w-1/4 bg-gray-200 rounded mb-4"></div>
-        <div class="h-8 w-3/4 bg-gray-200 rounded mb-4"></div>
-        <div class="h-5 w-1/3 bg-gray-200 rounded mb-6"></div>
-        <div class="h-16 w-full bg-gray-100 rounded mb-6"></div>
+        <div class="h-6 w-1/4 bg-gray-200 dark:bg-gray-800 rounded mb-4"></div>
+        <div class="h-8 w-3/4 bg-gray-200 dark:bg-gray-800 rounded mb-4"></div>
+        <div class="h-5 w-1/3 bg-gray-200 dark:bg-gray-800 rounded mb-6"></div>
+        <div class="h-16 w-full bg-gray-100 dark:bg-gray-800/60 rounded mb-6"></div>
         <div class="space-y-2 mb-6">
-          <div class="h-4 w-full bg-gray-100 rounded"></div>
-          <div class="h-4 w-5/6 bg-gray-100 rounded"></div>
-          <div class="h-4 w-2/3 bg-gray-100 rounded"></div>
+          <div class="h-4 w-full bg-gray-100 dark:bg-gray-800/60 rounded"></div>
+          <div class="h-4 w-5/6 bg-gray-100 dark:bg-gray-800/60 rounded"></div>
+          <div class="h-4 w-2/3 bg-gray-100 dark:bg-gray-800/60 rounded"></div>
         </div>
       </div>
       <div class="flex gap-4 pt-6">
-        <div class="h-12 flex-1 bg-gray-200 rounded-xl"></div>
-        <div class="h-12 w-28 bg-gray-200 rounded-xl"></div>
+        <div class="h-12 flex-1 bg-gray-200 dark:bg-gray-800 rounded-xl"></div>
+        <div class="h-12 w-28 bg-gray-200 dark:bg-gray-800 rounded-xl"></div>
       </div>
     </div>
   </div>
   } @else if (product) {
-  <div class="grid grid-cols-1 gap-10 lg:grid-cols-2 bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100">
+  <div
+    class="grid grid-cols-1 gap-10 lg:grid-cols-2 bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100 dark:border-gray-800 transition-colors">
     <!-- Image Gallery -->
     <div class="flex flex-col gap-4">
       <div
-        class="relative overflow-hidden rounded-xl bg-gray-100 border border-gray-200 aspect-square flex items-center justify-center">
+        class="relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 aspect-square flex items-center justify-center">
         <img [src]="selectedImage || product.thumbnail" [appImageFallback]="'assets/images/product-placeholder.svg'"
           [alt]="product.title"
           class="h-full w-full object-contain p-4 transition-transform duration-300 hover:scale-105" />
@@ -65,7 +65,7 @@
         @for (img of product.images; track img) {
         <button type="button" (click)="selectImage(img)" [class.ring-2]="selectedImage === img"
           [class.ring-blue-600]="selectedImage === img"
-          class="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border border-gray-200 bg-white p-1 transition hover:opacity-80">
+          class="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-1 transition hover:opacity-80">
           <img [src]="img" [appImageFallback]="'assets/images/product-placeholder.svg'" [alt]="product.title"
             class="h-full w-full object-cover rounded" />
         </button>
@@ -79,18 +79,19 @@
       <div>
         <!-- Category & Brand -->
         <div class="flex items-center gap-2 mb-2">
-          <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 capitalize">
+          <span
+            class="rounded-full bg-blue-50 dark:bg-blue-950/60 px-3 py-1 text-xs font-semibold text-blue-700 dark:text-blue-300 capitalize">
             {{ product.category }}
           </span>
           @if (product.brand) {
-          <span class="text-xs font-medium text-gray-500">
-            Thương hiệu: <strong class="text-gray-800">{{ product.brand }}</strong>
+          <span class="text-xs font-medium text-gray-500 dark:text-gray-400">
+            Thương hiệu: <strong class="text-gray-800 dark:text-gray-200">{{ product.brand }}</strong>
           </span>
           }
         </div>
 
         <!-- Title -->
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-3">
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 tracking-tight mb-3">
           {{ product.title }}
         </h1>
 
@@ -98,22 +99,22 @@
         <div class="flex items-center gap-4 mb-6">
           <div class="flex items-center gap-1 text-amber-500">
             <span>⭐</span>
-            <span class="font-bold text-gray-900 text-sm">{{ product.rating }}</span>
+            <span class="font-bold text-gray-900 dark:text-gray-100 text-sm">{{ product.rating }}</span>
             <span class="text-xs text-gray-400">/ 5.0</span>
           </div>
 
-          <div class="h-4 w-px bg-gray-200"></div>
+          <div class="h-4 w-px bg-gray-200 dark:bg-gray-700"></div>
 
           <div>
             @if (product.stock > 0) {
             <span
-              class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">
+              class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/50 px-2.5 py-1 rounded-full">
               <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
               Còn {{ product.stock }} sản phẩm
             </span>
             } @else {
             <span
-              class="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-700 bg-rose-50 px-2.5 py-1 rounded-full">
+              class="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-950/50 px-2.5 py-1 rounded-full">
               <span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span>
               Tạm hết hàng
             </span>
@@ -122,8 +123,8 @@
         </div>
 
         <!-- Price Display -->
-        <div class="rounded-xl bg-gray-50 p-4 mb-6 border border-gray-100">
-          <div class="flex items-line gap-3">
+        <div class="rounded-xl bg-gray-50 dark:bg-gray-800/60 p-4 mb-6 border border-gray-100 dark:border-gray-700">
+          <div class="flex items-baseline gap-3">
             @if (product.discountPercentage > 0) {
             <span class="text-3xl font-extrabold text-red-600">
               {{ product.price | discountCalculator: product.discountPercentage | vndCurrency }}
@@ -131,11 +132,12 @@
             <span class="text-base text-gray-400 line-through">
               {{ product.price | vndCurrency }}
             </span>
-            <span class="text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded">
+            <span
+              class="text-xs font-semibold text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-950/50 px-2 py-0.5 rounded">
               Tiết kiệm {{ product.discountPercentage }}%
             </span>
             } @else {
-            <span class="text-3xl font-extrabold text-gray-900">
+            <span class="text-3xl font-extrabold text-gray-900 dark:text-gray-100">
               {{ product.price | vndCurrency }}
             </span>
             }
@@ -144,8 +146,8 @@
 
         <!-- Description -->
         <div class="mb-6">
-          <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-2">Mô tả sản phẩm</h3>
-          <p class="text-gray-600 leading-relaxed text-sm whitespace-pre-line">
+          <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-200 uppercase tracking-wider mb-2">Mô tả sản phẩm</h3>
+          <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-sm whitespace-pre-line">
             {{ product.description }}
           </p>
         </div>
@@ -153,17 +155,17 @@
         <!-- Quantity selector -->
         @if (product.stock > 0) {
         <div class="mb-6">
-          <label class="block text-sm font-semibold text-gray-900 mb-2">Số lượng:</label>
-          <div class="inline-flex items-center border border-gray-300 rounded-lg">
+          <label class="block text-sm font-semibold text-gray-900 dark:text-gray-200 mb-2">Số lượng:</label>
+          <div class="inline-flex items-center border border-gray-300 dark:border-gray-700 rounded-lg">
             <button type="button" (click)="decreaseQuantity()" [disabled]="quantity <= 1"
-              class="px-3 py-2 text-gray-600 hover:bg-gray-100 disabled:opacity-40 rounded-l-lg transition">
+              class="px-3 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-40 rounded-l-lg transition">
               -
             </button>
-            <span class="px-4 py-2 text-sm font-semibold text-gray-900 min-w-[40px] text-center">
+            <span class="px-4 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 min-w-[40px] text-center">
               {{ quantity }}
             </span>
             <button type="button" (click)="increaseQuantity()" [disabled]="quantity >= product.stock"
-              class="px-3 py-2 text-gray-600 hover:bg-gray-100 disabled:opacity-40 rounded-r-lg transition">
+              class="px-3 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-40 rounded-r-lg transition">
               +
             </button>
           </div>
@@ -172,15 +174,15 @@
       </div>
 
       <!-- Action Buttons -->
-      <div class="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-100">
+      <div class="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-100 dark:border-gray-800">
         <button type="button" (click)="addToCart()" [disabled]="product.stock <= 0"
-          class="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-sm hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition">
+          class="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-sm hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:cursor-not-allowed transition">
           <span>🛒</span>
           {{ product.stock > 0 ? 'Thêm vào giỏ hàng' : 'Hết hàng' }}
         </button>
 
         <button type="button" (click)="goBack()"
-          class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-6 py-3.5 text-base font-semibold text-gray-700 hover:bg-gray-50 transition">
+          class="inline-flex items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-6 py-3.5 text-base font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
           Quay lại
         </button>
       </div>
@@ -191,12 +193,13 @@
   @defer (on viewport) {
   <app-product-reviews [productId]="product.id" />
   } @placeholder {
-  <div class="mt-8 rounded-2xl border border-dashed border-gray-300 bg-gray-50 p-8 text-center text-sm text-gray-500">
+  <div
+    class="mt-8 rounded-2xl border border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/40 p-8 text-center text-sm text-gray-500 dark:text-gray-400">
     <span>💬 Cuộn xuống để xem đánh giá sản phẩm...</span>
   </div>
   } @loading (minimum 1000ms) {
   <div
-    class="mt-8 rounded-2xl bg-blue-50 border border-blue-100 p-8 text-center text-sm font-semibold text-blue-600 animate-pulse">
+    class="mt-8 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/60 p-8 text-center text-sm font-semibold text-blue-600 dark:text-blue-400 animate-pulse">
     <span>⏳ Đang tải đánh giá khách hàng...</span>
   </div>
   }
@@ -205,26 +208,27 @@
   @defer (on viewport) {
   <app-related-products [category]="product.category" [currentProductId]="product.id" />
   } @placeholder {
-  <div class="mt-8 rounded-2xl border border-dashed border-gray-300 bg-gray-50 p-8 text-center text-sm text-gray-500">
+  <div
+    class="mt-8 rounded-2xl border border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/40 p-8 text-center text-sm text-gray-500 dark:text-gray-400">
     <span>📦 Cuộn xuống để xem gợi ý sản phẩm tương tự...</span>
   </div>
   } @loading (minimum 300ms) {
   <div
-    class="mt-8 rounded-2xl bg-blue-50 border border-blue-100 p-8 text-center text-sm font-semibold text-blue-600 animate-pulse">
+    class="mt-8 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/60 p-8 text-center text-sm font-semibold text-blue-600 dark:text-blue-400 animate-pulse">
     <span>⏳ Đang tải gợi ý sản phẩm...</span>
   </div>
   }
   } @else {
   <!-- Not Found Card -->
-  <div class="text-center bg-white rounded-2xl p-12 shadow-sm border border-gray-200 max-w-lg mx-auto">
-    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-50 text-amber-500 mb-4">
+  <div class="text-center bg-white dark:bg-gray-900 rounded-2xl p-12 shadow-sm border border-gray-200 dark:border-gray-800 max-w-lg mx-auto">
+    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-500 mb-4">
       <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
           d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
       </svg>
     </div>
-    <h2 class="text-2xl font-bold text-gray-900 mb-2">Không tìm thấy sản phẩm</h2>
-    <p class="text-gray-600 mb-6 text-sm">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Không tìm thấy sản phẩm</h2>
+    <p class="text-gray-600 dark:text-gray-400 mb-6 text-sm">
       Sản phẩm với mã ID <strong>#{{ id }}</strong> không tồn tại hoặc đã bị gỡ khỏi hệ thống.
     </p>
     <a routerLink="/products"

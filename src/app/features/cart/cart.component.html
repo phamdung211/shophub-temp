@@ -1,21 +1,21 @@
 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
   <!-- Breadcrumb -->
-  <nav class="flex items-center gap-2 text-sm text-gray-500 mb-6">
-    <a routerLink="/products" class="hover:text-blue-600 transition flex items-center gap-1">
+  <nav class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
+    <a routerLink="/products" class="hover:text-blue-600 dark:hover:text-blue-400 transition flex items-center gap-1">
       <span>🏠</span> Trang chủ
     </a>
     <span>/</span>
-    <span class="text-gray-900 font-medium">Giỏ hàng</span>
+    <span class="text-gray-900 dark:text-gray-100 font-medium">Giỏ hàng</span>
   </nav>
 
   @if (isEmpty()) {
   <!-- Giao diện khi giỏ hàng trống (Empty State) -->
-  <div class="rounded-2xl border border-gray-200 bg-white p-12 text-center shadow-sm max-w-2xl mx-auto my-12">
-    <div class="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-blue-50 text-5xl">
+  <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-12 text-center shadow-sm max-w-2xl mx-auto my-12 transition-colors">
+    <div class="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-blue-50 dark:bg-gray-800 text-5xl">
       🛒
     </div>
-    <h2 class="mt-6 text-2xl font-bold text-gray-900">Giỏ hàng của bạn đang trống</h2>
-    <p class="mt-2 text-gray-500 text-sm max-w-md mx-auto">
+    <h2 class="mt-6 text-2xl font-bold text-gray-900 dark:text-gray-100">Giỏ hàng của bạn đang trống</h2>
+    <p class="mt-2 text-gray-500 dark:text-gray-400 text-sm max-w-md mx-auto">
       Bạn chưa thêm món đồ nào vào giỏ hàng. Hãy khám phá hàng trăm sản phẩm hấp dẫn với ưu đãi đặc biệt tại ShopHub!
     </p>
     <div class="mt-8">
@@ -29,17 +29,17 @@
   <!-- Header giỏ hàng -->
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
     <div>
-      <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-3">
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
         <span>Giỏ hàng của bạn</span>
-        <span class="rounded-full bg-blue-100 px-3 py-0.5 text-sm font-semibold text-blue-700">
+        <span class="rounded-full bg-blue-100 dark:bg-blue-950/60 px-3 py-0.5 text-sm font-semibold text-blue-700 dark:text-blue-300">
           {{ totalItemsCount() }} sản phẩm
         </span>
       </h1>
-      <p class="text-sm text-gray-500 mt-1">Kiểm tra lại các sản phẩm trước khi thanh toán</p>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Kiểm tra lại các sản phẩm trước khi thanh toán</p>
     </div>
 
     <button type="button" (click)="clearCart()"
-      class="inline-flex items-center gap-1 text-sm text-red-600 hover:text-red-700 font-medium transition self-start sm:self-auto hover:bg-red-50 px-3 py-1.5 rounded-lg border border-red-200">
+      class="inline-flex items-center gap-1 text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium transition self-start sm:self-auto hover:bg-red-50 dark:hover:bg-red-950/60 px-3 py-1.5 rounded-lg border border-red-200 dark:border-red-900/60">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
           d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -52,32 +52,32 @@
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
     <!-- Cột trái: Danh sách sản phẩm (2/3) -->
     <div class="lg:col-span-2 space-y-4">
-      <div class="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden divide-y divide-gray-100">
+      <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm overflow-hidden divide-y divide-gray-100 dark:divide-gray-800 transition-colors">
         @for (item of cartItems(); track item.product.id) {
         <div
-          class="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 hover:bg-gray-50/50 transition">
+          class="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition">
           <!-- Ảnh sản phẩm -->
           <a [routerLink]="['/products', item.product.id]" class="flex-shrink-0 group">
             <img [src]="item.product.thumbnail" [appImageFallback]="'assets/images/product-placeholder.svg'"
               [alt]="item.product.title"
-              class="h-24 w-24 rounded-xl object-cover border border-gray-100 group-hover:scale-105 transition" />
+              class="h-24 w-24 rounded-xl object-cover border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 group-hover:scale-105 transition" />
           </a>
 
           <!-- Thông tin sản phẩm -->
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2">
               <span
-                class="inline-block rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 capitalize">
+                class="inline-block rounded-md bg-gray-100 dark:bg-gray-800 px-2 py-0.5 text-xs font-medium text-gray-600 dark:text-gray-300 capitalize">
                 {{ item.product.category }}
               </span>
-              @if (item.product.stock <= 5) { <span class="text-xs text-amber-600 font-medium">
+              @if (item.product.stock <= 5) { <span class="text-xs text-amber-600 dark:text-amber-400 font-medium">
                 ⚠️ Chỉ còn {{ item.product.stock }} sản phẩm
                 </span>
                 }
             </div>
 
-            <h3 class="mt-1 font-semibold text-gray-900 truncate">
-              <a [routerLink]="['/products', item.product.id]" class="hover:text-blue-600 transition">
+            <h3 class="mt-1 font-semibold text-gray-900 dark:text-gray-100 truncate">
+              <a [routerLink]="['/products', item.product.id]" class="hover:text-blue-600 dark:hover:text-blue-400 transition">
                 {{ item.product.title }}
               </a>
             </h3>
@@ -88,14 +88,14 @@
               <span class="font-bold text-red-600 text-base">
                 {{ item.product.price | discountCalculator: item.product.discountPercentage | vndCurrency }}
               </span>
-              <span class="text-xs text-gray-400 line-through">
+              <span class="text-xs text-gray-400 dark:text-gray-500 line-through">
                 {{ item.product.price | vndCurrency }}
               </span>
-              <span class="text-xs text-green-700 font-medium">
+              <span class="text-xs text-green-700 dark:text-green-400 font-medium">
                 -{{ item.product.discountPercentage }}%
               </span>
               } @else {
-              <span class="font-bold text-gray-900 text-base">
+              <span class="font-bold text-gray-900 dark:text-gray-100 text-base">
                 {{ item.product.price | vndCurrency }}
               </span>
               }
@@ -103,17 +103,17 @@
           </div>
 
           <!-- Bộ điều khiển số lượng -->
-          <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden bg-white">
+          <div class="flex items-center border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-800">
             <button type="button" (click)="decreaseQuantity(item)"
-              class="px-3 py-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition font-bold"
+              class="px-3 py-1.5 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 transition font-bold"
               [title]="item.quantity === 1 ? 'Xóa sản phẩm' : 'Giảm 1'">
               -
             </button>
             <input type="number" [value]="item.quantity" min="1" [max]="item.product.stock"
               (change)="onQuantityInput(item, $event)"
-              class="w-12 py-1.5 text-center text-sm font-semibold text-gray-800 border-x border-gray-300 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+              class="w-12 py-1.5 text-center text-sm font-semibold text-gray-800 dark:text-gray-100 bg-white dark:bg-gray-800 border-x border-gray-300 dark:border-gray-700 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
             <button type="button" (click)="increaseQuantity(item)" [disabled]="item.quantity >= item.product.stock"
-              class="px-3 py-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 disabled:bg-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed transition font-bold"
+              class="px-3 py-1.5 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-300 dark:disabled:text-gray-600 disabled:cursor-not-allowed transition font-bold"
               title="Tăng 1">
               +
             </button>
@@ -121,8 +121,8 @@
 
           <!-- Thành tiền cho món này -->
           <div class="text-right sm:min-w-[120px]">
-            <p class="text-xs text-gray-400">Thành tiền</p>
-            <p class="font-bold text-blue-600 text-base mt-0.5">
+            <p class="text-xs text-gray-400 dark:text-gray-500">Thành tiền</p>
+            <p class="font-bold text-blue-600 dark:text-blue-400 text-base mt-0.5">
               @if (item.product.discountPercentage > 0) {
               {{ (item.product.price | discountCalculator: item.product.discountPercentage) * item.quantity |
               vndCurrency }}
@@ -134,7 +134,7 @@
 
           <!-- Nút xóa món -->
           <button type="button" (click)="removeItem(item.product.id, item.product.title)"
-            class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
+            class="p-2 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/60 rounded-lg transition"
             title="Xóa món này khỏi giỏ hàng">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -148,7 +148,7 @@
       <!-- Nút điều hướng tiếp tục xem hàng -->
       <div class="pt-2">
         <a routerLink="/products"
-          class="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 transition">
+          class="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition">
           <span>← Tiếp tục mua sắm</span>
         </a>
       </div>
@@ -156,43 +156,43 @@
 
     <!-- Cột phải: Tóm tắt đơn hàng (1/3) -->
     <div class="lg:col-span-1">
-      <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sticky top-24 space-y-5">
-        <h2 class="text-lg font-bold text-gray-900 border-b border-gray-100 pb-3">
+      <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm sticky top-24 space-y-5 transition-colors">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 border-b border-gray-100 dark:border-gray-800 pb-3">
           Tóm tắt đơn hàng
         </h2>
 
         <div class="space-y-3 text-sm">
-          <div class="flex justify-between text-gray-600">
+          <div class="flex justify-between text-gray-600 dark:text-gray-400">
             <span>Tổng số lượng:</span>
-            <span class="font-semibold text-gray-900">{{ totalItemsCount() }} món</span>
+            <span class="font-semibold text-gray-900 dark:text-gray-100">{{ totalItemsCount() }} món</span>
           </div>
 
-          <div class="flex justify-between text-gray-600">
+          <div class="flex justify-between text-gray-600 dark:text-gray-400">
             <span>Tạm tính (giá gốc):</span>
-            <span class="font-medium text-gray-700">{{ totalOriginalPrice() | vndCurrency }}</span>
+            <span class="font-medium text-gray-700 dark:text-gray-300">{{ totalOriginalPrice() | vndCurrency }}</span>
           </div>
 
           @if (totalSavings() > 0) {
-          <div class="flex justify-between text-emerald-600">
+          <div class="flex justify-between text-emerald-600 dark:text-emerald-400">
             <span>Tiết kiệm được:</span>
             <span class="font-semibold">-{{ totalSavings() | vndCurrency }}</span>
           </div>
           }
 
-          <div class="flex justify-between text-gray-600">
+          <div class="flex justify-between text-gray-600 dark:text-gray-400">
             <span>Phí vận chuyển:</span>
-            <span class="font-semibold text-emerald-600">Miễn phí</span>
+            <span class="font-semibold text-emerald-600 dark:text-emerald-400">Miễn phí</span>
           </div>
         </div>
 
-        <div class="border-t border-gray-200 pt-4">
+        <div class="border-t border-gray-200 dark:border-gray-800 pt-4">
           <div class="flex justify-between items-baseline mb-1">
-            <span class="text-base font-bold text-gray-900">Tổng thanh toán:</span>
-            <span class="text-2xl font-extrabold text-blue-600">
+            <span class="text-base font-bold text-gray-900 dark:text-gray-100">Tổng thanh toán:</span>
+            <span class="text-2xl font-extrabold text-blue-600 dark:text-blue-400">
               {{ totalCartPrice() | vndCurrency }}
             </span>
           </div>
-          <p class="text-xs text-gray-400 text-right">(Đã bao gồm thuế VAT nếu có)</p>
+          <p class="text-xs text-gray-400 dark:text-gray-500 text-right">(Đã bao gồm thuế VAT nếu có)</p>
         </div>
 
         <!-- Nút tiến hành thanh toán -->
@@ -202,7 +202,7 @@
         </button>
 
         <!-- Cam kết chất lượng -->
-        <div class="rounded-xl bg-gray-50 p-4 border border-gray-100 space-y-2 text-xs text-gray-600">
+        <div class="rounded-xl bg-gray-50 dark:bg-gray-800/60 p-4 border border-gray-100 dark:border-gray-700 space-y-2 text-xs text-gray-600 dark:text-gray-300">
           <div class="flex items-center gap-2">
             <span>🛡️</span>
             <span>Bảo mật thông tin thanh toán 100%</span>
@@ -224,24 +224,24 @@
 <!-- POPUP MODAL XÁC NHẬN XÓA (Hiện đại & mượt mà) -->
 @if (confirmModal().isOpen) {
 <!-- Lớp nền tối mờ (Backdrop) -->
-<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity">
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity">
   <!-- Khung Card Modal -->
-  <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-gray-100 space-y-4">
+  <div class="bg-white dark:bg-gray-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-gray-100 dark:border-gray-800 space-y-4 transition-colors">
     <!-- Icon thùng rác cảnh báo -->
-    <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto text-2xl">
+    <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-300 flex items-center justify-center mx-auto text-2xl">
       🗑️
     </div>
 
     <!-- Tiêu đề & Lời nhắn -->
     <div class="text-center">
-      <h3 class="text-lg font-bold text-gray-900">{{ confirmModal().title }}</h3>
-      <p class="text-sm text-gray-500 mt-2">{{ confirmModal().message }}</p>
+      <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">{{ confirmModal().title }}</h3>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">{{ confirmModal().message }}</p>
     </div>
 
     <!-- Hai nút bấm Hủy / Xác nhận -->
     <div class="flex gap-3 pt-2">
       <button type="button" (click)="closeModal()"
-        class="flex-1 px-4 py-2.5 rounded-xl border border-gray-300 text-gray-700 text-sm font-semibold hover:bg-gray-50 transition">
+        class="flex-1 px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 transition">
         Hủy bỏ
       </button>
       <button type="button" (click)="confirmModal().onConfirm()"

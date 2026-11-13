@@ -16,8 +16,12 @@ export class AuthService {
   private readonly apiUrl = 'https://dummyjson.com/auth/login';
   // Đọc thông tin user đã lưu trước đó (nếu có)
   private getInitialUser(): User | null {
-    const savedUser = localStorage.getItem('user');
-    return savedUser ? JSON.parse(savedUser) : null;
+    try {
+      const savedUser = localStorage.getItem('user');
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch {
+      return null;
+    }
   }
 
   currentUser = signal<User | null>(this.getInitialUser());
@@ -45,6 +49,23 @@ export class AuthService {
         localStorage.setItem('user', JSON.stringify(res));
       })
     );
+  }
+
+  /**
+   * Cập nhật thông tin người dùng trong Signal và localStorage
+   * Đồng thời kích hoạt reactivity tức thì trên toàn ứng dụng (Header, Avatar, Profile...)
+   */
+  updateUserProfile(updatedData: Partial<User>): void {
+    const current = this.currentUser();
+    if (!current) return;
+
+    const updatedUser: User = {
+      ...current,
+      ...updatedData,
+    };
+
+    this.currentUser.set(updatedUser);
+    localStorage.setItem('user', JSON.stringify(updatedUser));
   }
 
   logout(): void {

@@ -1,46 +1,46 @@
 <div class="min-h-[70vh] flex items-center justify-center px-4 py-12">
     <div
-        class="max-w-xl w-full bg-white rounded-3xl border border-gray-100 shadow-xl p-8 sm:p-12 text-center space-y-6">
+        class="max-w-xl w-full bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-xl p-8 sm:p-12 text-center space-y-6 transition-colors">
         <!-- Icon thành công -->
         <div
-            class="mx-auto w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center text-4xl shadow-inner">
+            class="mx-auto w-20 h-20 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center text-4xl shadow-inner">
             🎉
         </div>
 
         <div>
-            <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900">Đặt Hàng Thành Công!</h1>
-            <p class="text-gray-500 mt-2 text-sm sm:text-base">
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-gray-100">Đặt Hàng Thành Công!</h1>
+            <p class="text-gray-500 dark:text-gray-400 mt-2 text-sm sm:text-base">
                 Cảm ơn bạn đã tin tưởng mua sắm tại <strong>ShopHub</strong>. Đơn hàng của bạn đã được ghi nhận và đang
                 được đóng gói.
             </p>
         </div>
 
         <!-- Hộp thông tin mã đơn -->
-        <div class="bg-gray-50 rounded-2xl p-5 border border-gray-200/80 text-left space-y-2">
+        <div class="bg-gray-50 dark:bg-gray-800/60 rounded-2xl p-5 border border-gray-200/80 dark:border-gray-700/80 text-left space-y-2">
             <div class="flex justify-between items-center text-sm">
-                <span class="text-gray-500">Mã đơn hàng:</span>
-                <span class="font-bold text-blue-600 font-mono text-base">#{{ orderId }}</span>
+                <span class="text-gray-500 dark:text-gray-400">Mã đơn hàng:</span>
+                <span class="font-bold text-blue-600 dark:text-blue-400 font-mono text-base">#{{ orderId }}</span>
             </div>
             @if (order) {
             <div class="flex justify-between items-center text-sm">
-                <span class="text-gray-500">Người nhận:</span>
-                <span class="font-medium text-gray-900">{{ order.customerName }} ({{ order.customerPhone }})</span>
+                <span class="text-gray-500 dark:text-gray-400">Người nhận:</span>
+                <span class="font-medium text-gray-900 dark:text-gray-100">{{ order.customerName }} ({{ order.customerPhone }})</span>
             </div>
             <div class="flex justify-between items-center text-sm">
-                <span class="text-gray-500">Tổng thanh toán:</span>
-                <span class="font-bold text-red-600">{{ order.totalAmount | vndCurrency }}</span>
+                <span class="text-gray-500 dark:text-gray-400">Tổng thanh toán:</span>
+                <span class="font-bold text-red-600 dark:text-red-400">{{ order.totalAmount | vndCurrency }}</span>
             </div>
             }
             <div class="flex justify-between items-center text-sm">
-                <span class="text-gray-500">Trạng thái:</span>
+                <span class="text-gray-500 dark:text-gray-400">Trạng thái:</span>
                 <span
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300">
                     Chờ xác nhận
                 </span>
             </div>
         </div>
 
-        <p class="text-xs text-gray-400">
+        <p class="text-xs text-gray-400 dark:text-gray-500">
             Nhân viên CSKH của ShopHub sẽ sớm liên hệ qua số điện thoại để xác nhận lịch giao hàng cụ thể.
         </p>
 
@@ -51,7 +51,7 @@
                 🛍️ Tiếp tục mua sắm
             </a>
             <a routerLink="/cart"
-                class="flex-1 rounded-xl border border-gray-300 py-3.5 px-4 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition">
+                class="flex-1 rounded-xl border border-gray-300 dark:border-gray-700 py-3.5 px-4 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
                 🛒 Xem lại giỏ hàng
             </a>
         </div>

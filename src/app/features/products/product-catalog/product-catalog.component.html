@@ -9,8 +9,8 @@
   </div>
 
   <!-- Dumb Component: Bộ lọc & Thanh tìm kiếm tức thì RxJS Live Search -->
-  <app-product-filter-bar [selectedCategory]="selectedCategory" (searchChange)="onSearchChange($event)"
-    (categoryChange)="onCategoryChange($event)" />
+  <app-product-filter-bar #filterBar [selectedCategory]="selectedCategory" (searchChange)="onSearchChange($event)"
+    (categoryChange)="onCategoryChange($event)" (filterChange)="onFilterChange($event)" />
 
   <!-- Thông báo trạng thái tìm kiếm / lọc -->
   @if (searchKeyword) {
@@ -76,34 +76,40 @@
   <!-- Danh sách sản phẩm thực tế -->
   <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
     @for (product of products; track product.id) {
-    <app-product-card [product]="product" (addToCart)="onAddToCart($event)" (delete)="deleteProduct($event)" />
-    } @empty {
-    <div class="col-span-full py-16 text-center">
-      <div
-        class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-2xl text-gray-400">
+    <app-product-card [product]="product" (addToCart)="onAddToCart($event)" (buyNow)="onBuyNow($event)"
+      (delete)="deleteProduct($event)" />
+    }@empty {
+    <div
+      class="col-span-full flex flex-col items-center justify-center py-16 px-4 text-center bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm transition-colors">
+      <div class="w-16 h-16 rounded-full bg-blue-50 dark:bg-gray-700 text-3xl flex items-center justify-center mb-4">
         🔍
       </div>
-      <h3 class="text-base font-semibold text-gray-900 mb-1">
+      <h3 class="text-base font-bold text-gray-800 dark:text-gray-100 mb-1">
         Không tìm thấy sản phẩm phù hợp
       </h3>
-      <p class="text-sm text-gray-500">
-        Hãy thử tìm kiếm bằng từ khóa khác hoặc chuyển sang danh mục khác.
+      <p class="text-xs text-gray-500 dark:text-gray-400 max-w-sm mb-4">
+        Rất tiếc, không có sản phẩm nào thỏa mãn tất cả tiêu chí bạn đã chọn. Hãy thử nới lỏng khoảng giá hoặc chọn lại
+        số sao.
       </p>
+      <button type="button" (click)="filterBar.resetFilters()"
+        class="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition">
+        Đặt lại bộ lọc
+      </button>
     </div>
     }
   </div>
 
   <!-- Thanh phân trang (Pagination) -->
   @if (totalPages > 1 && products.length > 0) {
-  <div class="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-gray-200 pt-6">
+  <div class="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-gray-200 dark:border-gray-800 pt-6">
     <!-- Chỉ số hiển thị -->
-    <p class="text-sm text-gray-600">
+    <p class="text-sm text-gray-600 dark:text-gray-400">
       Hiển thị
-      <span class="font-semibold text-gray-900">{{ startIndex }}</span>
+      <span class="font-semibold text-gray-900 dark:text-gray-100">{{ startIndex }}</span>
       -
-      <span class="font-semibold text-gray-900">{{ endIndex }}</span>
+      <span class="font-semibold text-gray-900 dark:text-gray-100">{{ endIndex }}</span>
       trên tổng số
-      <span class="font-semibold text-gray-900">{{ totalProducts }}</span>
+      <span class="font-semibold text-gray-900 dark:text-gray-100">{{ totalProducts }}</span>
       sản phẩm
     </p>
 
@@ -111,7 +117,7 @@
     <nav class="inline-flex items-center gap-1 shadow-sm rounded-lg" aria-label="Pagination">
       <!-- Nút Trang trước -->
       <button type="button" (click)="prevPage()" [disabled]="currentPage === 1 || isLoading"
-        class="inline-flex items-center gap-1 rounded-l-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition">
+        class="inline-flex items-center gap-1 rounded-l-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition">
         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
@@ -120,18 +126,18 @@
 
       <!-- Các nút số trang -->
       @for (page of visiblePages; track page) {
-      <button type="button" (click)="goToPage(page)" [class.bg-blue-600]="page === currentPage"
-        [class.text-white]="page === currentPage" [class.border-blue-600]="page === currentPage"
-        [class.font-bold]="page === currentPage" [class.bg-white]="page !== currentPage"
-        [class.text-gray-700]="page !== currentPage" [class.hover:bg-gray-50]="page !== currentPage"
-        class="border border-gray-300 px-3.5 py-2 text-sm font-medium transition">
+      <button type="button" (click)="goToPage(page)"
+        class="border border-gray-300 dark:border-gray-700 px-3.5 py-2 text-sm font-medium transition"
+        [class]="page === currentPage
+          ? 'bg-blue-600 text-white border-blue-600 font-bold'
+          : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'">
         {{ page }}
       </button>
       }
 
       <!-- Nút Trang sau -->
       <button type="button" (click)="nextPage()" [disabled]="currentPage === totalPages || isLoading"
-        class="inline-flex items-center gap-1 rounded-r-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition">
+        class="inline-flex items-center gap-1 rounded-r-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition">
         <span>Sau</span>
         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />

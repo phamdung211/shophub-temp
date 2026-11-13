@@ -43,6 +43,7 @@ export class ProductCardComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ required: true }) product!: Product;
 
   @Output() addToCart = new EventEmitter<Product>();
+  @Output() buyNow = new EventEmitter<Product>();
   @Output() delete = new EventEmitter<Product>();
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -57,9 +58,25 @@ export class ProductCardComponent implements OnInit, OnChanges, OnDestroy {
     console.log('[ProductCard] ngOnDestroy');
   }
 
-  onBuyClick(): void {
+  onAddToCartClick(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
     this.addToCart.emit(this.product);
   }
+
+  onBuyNowClick(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.buyNow.emit(this.product);
+  }
+
+  // Giữ alias tương thích nếu có code cũ gọi
+  onBuyClick(): void {
+    this.onBuyNowClick();
+  }
+
   onDeleteClick(): void {
     this.delete.emit(this.product);
   }

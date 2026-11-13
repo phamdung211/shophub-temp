@@ -1,13 +1,13 @@
 @if (isOpen) {
-<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity"
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity"
     (click)="onCancel()">
     <!-- Modal Box: Chặn nổi bọt sự kiện click lên backdrop -->
-    <div class="relative w-full max-w-md bg-white rounded-2xl p-6 shadow-2xl transition-all transform scale-100"
+    <div class="relative w-full max-w-md bg-white dark:bg-gray-900 border border-transparent dark:border-gray-800 rounded-2xl p-6 shadow-2xl transition-all transform scale-100"
         (click)="$event.stopPropagation()">
         <div class="flex items-start gap-4">
             <!-- Icon Cảnh báo nổi bật -->
             <div class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center"
-                [class]="isDanger ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'">
+                [class]="isDanger ? 'bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-300' : 'bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-300'">
                 @if (isDanger) {
                 <span class="text-2xl">⚠️</span>
                 } @else {
@@ -17,15 +17,15 @@
 
             <!-- Tiêu đề & Nội dung -->
             <div class="flex-1">
-                <h3 class="text-lg font-bold text-gray-900">{{ title }}</h3>
-                <p class="mt-2 text-sm text-gray-500 leading-relaxed">{{ message }}</p>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">{{ title }}</h3>
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{{ message }}</p>
             </div>
         </div>
 
         <!-- Hàng nút hành động -->
         <div class="mt-6 flex items-center justify-end gap-3">
             <button type="button" (click)="onCancel()"
-                class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition">
+                class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition">
                 {{ cancelText }}
             </button>
 
