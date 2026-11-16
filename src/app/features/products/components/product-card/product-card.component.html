@@ -6,6 +6,15 @@
   </a>
 
   <h3 class="mt-3 font-semibold text-gray-900 dark:text-gray-100 line-clamp-1">
+    <!-- Badge hiển thị số sao đánh giá & danh mục -->
+    <div class="mt-1.5 flex items-center gap-2 text-xs">
+      <div class="flex items-center text-amber-500 font-bold">
+        <span>★</span>
+        <span class="ml-1 text-gray-800 dark:text-gray-200">{{ product.rating }}</span>
+      </div>
+      <span class="text-gray-300 dark:text-gray-600">•</span>
+      <span class="text-gray-500 dark:text-gray-400 capitalize">{{ product.category }}</span>
+    </div>
     <a [routerLink]="['/products', product.id]" class="hover:text-blue-600 dark:hover:text-blue-400 transition">
       {{ product.title }}
     </a>
